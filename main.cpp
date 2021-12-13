@@ -24,7 +24,6 @@ int main(int argc, char *argv[]) {
       if (e.type == SDL_QUIT) {
         quit = true;
       } else if (e.type == SDL_KEYDOWN) {
-        std::cout << "Got a keypress!" << std::endl;
         window->MovePlayer(&e);
       }
     }

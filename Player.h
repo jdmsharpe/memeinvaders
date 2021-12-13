@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 #include <iostream>
 
 #include "ScreenDefs.h"
@@ -22,7 +23,7 @@ public:
   void Fire();
 
 private:
-  SDL_Renderer*& m_renderer;
+  SDL_Renderer *m_renderer = NULL;
   SDL_Texture *m_texture = NULL;
 
   SDL_Rect *m_screenBox = NULL;
