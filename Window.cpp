@@ -1,5 +1,4 @@
 #include "Window.h"
-#include "ScreenDefs.h"
 
 namespace {
 constexpr Uint32 k_frameDelay = 32;
@@ -8,12 +7,10 @@ constexpr Uint32 k_frameDelay = 32;
 Window::Window() {}
 
 bool Window::Open() {
-  bool success = true;
-
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError()
               << std::endl;
-    success = false;
+    return false;
   } else {
     // Create window
     SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &m_window,
@@ -21,19 +18,30 @@ bool Window::Open() {
     if (!m_window || !m_renderer) {
       std::cout << "Window or renderer could not be created. Error code: "
                 << SDL_GetError() << std::endl;
-      success = false;
+      return false;
     } else {
       // Get window surface
       m_screenSurface = SDL_GetWindowSurface(m_window);
     }
   }
-  return success;
+
+  m_player = new Player(m_renderer);
+  if (!m_player->Initialize()) {
+    std::cout << "Failed to initialize player!" << std::endl;
+    return false;
+  }
+
+  return true;
 }
 
 void Window::Close() {
+  // Delete player
+  delete m_player;
+  m_player = nullptr;
+
   // Destroy renderer
   SDL_DestroyRenderer(m_renderer);
-  m_renderer = nullptr;
+  m_renderer = NULL;
 
   // Deallocate surface
   SDL_FreeSurface(m_screenSurface);
@@ -52,6 +60,8 @@ void Window::Render() {
 
   SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(m_renderer);
+
+  m_player->Render();
 
   SDL_RenderPresent(m_renderer);
 
