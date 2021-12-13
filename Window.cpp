@@ -2,7 +2,7 @@
 #include "ScreenDefs.h"
 
 namespace {
-	constexpr Uint32 k_frameDelay = 32;
+constexpr Uint32 k_frameDelay = 32;
 }
 
 Window::Window() {}
@@ -16,7 +16,8 @@ bool Window::Open() {
     success = false;
   } else {
     // Create window
-    SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &m_window, &m_renderer);
+    SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &m_window,
+                                &m_renderer);
     if (!m_window || !m_renderer) {
       std::cout << "Window or renderer could not be created. Error code: "
                 << SDL_GetError() << std::endl;
