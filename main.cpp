@@ -6,7 +6,11 @@
 int main(int argc, char *argv[]) {
   // Construct SDL window
   std::unique_ptr<Window> window = std::make_unique<Window>();
-  window->Open();
+  if (!window->Open()) {
+      // Failed :(
+      SDL_Delay(500);
+      return -1;
+  }
 
   // Main loop flag
   bool quit = false;
@@ -19,6 +23,9 @@ int main(int argc, char *argv[]) {
       // User closes window
       if (e.type == SDL_QUIT) {
         quit = true;
+      } else if (e.type == SDL_KEYDOWN) {
+        std::cout << "Got a keypress!" << std::endl;
+        window->MovePlayer(&e);
       }
     }
 
