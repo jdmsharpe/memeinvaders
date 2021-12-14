@@ -5,7 +5,6 @@
 #include <memory>
 #include <vector>
 
-#include "Entity.h"
 #include "Projectile.h"
 #include "ScreenDefs.h"
 
