@@ -17,8 +17,12 @@ public:
   // Update entity positions and process commands
   void Render();
 
-  inline void MovePlayer(SDL_Event *e) {
-      m_player->Move(e);
+  inline void PlayerMoves(const Uint8 *keyboardState) {
+    m_player->Move(keyboardState);
+  }
+
+  inline void PlayerFires() {
+    m_player->Fire();
   }
 
 private:
