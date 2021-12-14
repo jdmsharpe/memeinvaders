@@ -1,35 +1,31 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include <SDL2/SDL.h>
-#include <SDL_image.h>
 #include <iostream>
+#include <memory>
+#include <vector>
 
+#include "Entity.h"
+#include "Projectile.h"
 #include "ScreenDefs.h"
 
-class Player {
+class Player : public Entity {
 public:
   Player(SDL_Renderer *renderer);
   ~Player();
 
-  std::pair<int, int> GetPosition() { return std::make_pair(m_xPos, m_yPos); }
-
   // Grab image and create texture
-  bool Initialize();
+  bool Initialize() override;
   // Render entity
-  void Render();
+  void Render() override;
   // Process keyboard input
-  void Move(SDL_Event *e);
+  void Move(const Uint8* keyboardState);
+  // Fire projectile
   void Fire();
 
 private:
-  SDL_Renderer *m_renderer = NULL;
-  SDL_Texture *m_texture = NULL;
-
-  SDL_Rect *m_screenBox = NULL;
-  SDL_Rect *m_textureBox = NULL;
-
-  int m_xPos, m_yPos;
+  // Stores all projectiles player can fire
+  std::vector<std::unique_ptr<Projectile>> m_projectileArray;
 
   // Keeps track of shots on screen
   int m_shotsPresent = 0;

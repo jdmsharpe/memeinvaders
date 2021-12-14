@@ -23,9 +23,21 @@ int main(int argc, char *argv[]) {
       // User closes window
       if (e.type == SDL_QUIT) {
         quit = true;
-      } else if (e.type == SDL_KEYDOWN) {
-        window->MovePlayer(&e);
       }
+    }
+
+    // Get all keys currently pressed
+    const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
+
+    // Player presses arrow keys to move
+    if (keyboardState[SDL_SCANCODE_UP] || keyboardState[SDL_SCANCODE_DOWN] ||
+        keyboardState[SDL_SCANCODE_LEFT] || keyboardState[SDL_SCANCODE_RIGHT]) {
+      window->PlayerMoves(keyboardState);
+    }
+
+    // Player presses space to fire
+    if (keyboardState[SDL_SCANCODE_SPACE]) {
+      window->PlayerFires();
     }
 
     // Update window
