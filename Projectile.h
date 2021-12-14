@@ -1,17 +1,19 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
 
-class Projectile {
+#include "Entity.h"
+
+class Projectile : public Entity {
 public:
-  Projectile(bool shouldBeRendered, int startingX, int startingY);
+  Projectile(SDL_Renderer *renderer, bool shouldBeRendered, int startingX,
+             int startingY);
   ~Projectile(){};
 
-  void Render();
+  bool Initialize() override { return true; }
+  void Render() override;
 
 private:
   bool m_shouldBeRendered = false;
-
-  int m_xPos, m_yPos;
 };
 
 #endif // PROJECTILE_H

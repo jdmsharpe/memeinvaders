@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
+#include <utility>
 
 // Abstract class that all objects in game inherit from
 class Entity {

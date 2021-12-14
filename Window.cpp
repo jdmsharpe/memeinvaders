@@ -1,7 +1,7 @@
 #include "Window.h"
 
 namespace {
-constexpr Uint32 k_frameDelay = 32;
+constexpr Uint32 k_frameDelay = 45;
 }
 
 Window::Window() {}
