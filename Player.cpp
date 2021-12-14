@@ -7,7 +7,8 @@ constexpr int k_width = 200;
 constexpr int k_height = 200;
 constexpr int k_pixelsToMove = 10;
 const std::string k_filename = "../memeinvaders/eric.png";
-constexpr int k_projectileHeightLimit = 5;
+constexpr int k_projectileHeightLimit = 0;
+constexpr int k_shotTimeout = 250; // ms
 } // namespace
 
 Player::Player(SDL_Renderer *renderer) : Entity(renderer) {
@@ -86,14 +87,20 @@ void Player::Move(const Uint8 *keyboardState) {
 
 void Player::Fire() {
   // Make sure we're not going over cap
-  if (m_projectileArray.size() <= static_cast<size_t>(k_maxProjectiles)) {
-    std::unique_ptr<Projectile> newProj =
-        std::make_unique<Projectile>(m_renderer, true, m_xPos + k_width / 2, m_yPos);
-    // Add projectile to vector for storage
-    std::cout << "Created projectile. Current size of vector is: "
-              << m_projectileArray.size() << std::endl;
-    m_projectileArray.push_back(std::move(newProj));
-    // Store total number on screen
-    m_shotsPresent = static_cast<int>(m_projectileArray.size());
+  if (m_shotsPresent <= k_maxProjectiles) {
+    // Check last time we fired
+    auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        Clock::now() - m_lastFire);
+    if (timeElapsed.count() >= k_shotTimeout) {
+      m_lastFire = Clock::now();
+      std::unique_ptr<Projectile> newProj = std::make_unique<Projectile>(
+          m_renderer, true, m_xPos + k_width / 2, m_yPos);
+      // Add projectile to vector for storage
+      std::cout << "Created projectile. Current size of vector is: "
+                << m_projectileArray.size() << std::endl;
+      m_projectileArray.push_back(std::move(newProj));
+      // Store total number on screen
+      m_shotsPresent = static_cast<int>(m_projectileArray.size());
+    }
   }
 }

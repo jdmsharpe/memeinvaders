@@ -12,9 +12,9 @@ Projectile::Projectile(SDL_Renderer *renderer, bool shouldBeRendered,
 }
 
 void Projectile::Render() {
+  m_yPos -= k_amountToMoveUp;
   if (m_shouldBeRendered) {
       SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
       SDL_RenderDrawLine(m_renderer, m_xPos, m_yPos, m_xPos, m_yPos - k_length);
   }
-  m_yPos -= k_amountToMoveUp;
 }
