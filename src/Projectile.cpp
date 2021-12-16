@@ -3,7 +3,7 @@
 namespace {
 constexpr int k_width = 75;
 constexpr int k_height = 75;
-const std::string k_filename = "../memeinvaders/enemy1.png";
+const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 } // namespace
 
 Projectile::Projectile(SDL_Renderer *renderer, bool shouldBeRendered,
