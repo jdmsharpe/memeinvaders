@@ -50,14 +50,6 @@ protected:
     m_yVel = yVel;
   }
 
-  inline void SetVelocityComponent(int idx, double velComp) {
-    if (idx) {
-      m_yVel = velComp;
-    } else {
-      m_xVel = velComp;
-    }
-  }
-
   inline void UpdatePositionFromVelocity() {
     double xPosResult = m_xVel * DELTA_TIME;
     double yPosResult = m_yVel * DELTA_TIME;

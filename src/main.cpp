@@ -11,6 +11,8 @@ int main(int argc, char *argv[]) {
 
   // Main loop flag
   bool quit = false;
+  // Game starts on main menu
+  GameState gameState = GameState::MAIN_MENU;
   // Event handler
   SDL_Event e;
 
@@ -26,19 +28,32 @@ int main(int argc, char *argv[]) {
     // Get all keys currently pressed
     const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
-    // Player presses arrow keys to move
-    if (keyboardState[SDL_SCANCODE_UP] || keyboardState[SDL_SCANCODE_DOWN] ||
-        keyboardState[SDL_SCANCODE_LEFT] || keyboardState[SDL_SCANCODE_RIGHT]) {
-      window->PlayerMoves(keyboardState);
-    }
+    // Change between game states on player input
+    switch (gameState) {
+    case GameState::MAIN_MENU:
+      // Space to exit for now
+      if (keyboardState[SDL_SCANCODE_SPACE]) {
+        gameState = GameState::GAME_MODE_1;
+      }
+      break;
 
-    // Player presses space to fire
-    if (keyboardState[SDL_SCANCODE_SPACE]) {
-      window->PlayerFires();
-    }
+    case GameState::SETTINGS:
+      break;
 
-    // Update window
-    window->Render();
+    case GameState::GAME_MODE_1:
+      // Arrow keys to move
+      if (keyboardState[SDL_SCANCODE_UP] || keyboardState[SDL_SCANCODE_DOWN] ||
+          keyboardState[SDL_SCANCODE_LEFT] || keyboardState[SDL_SCANCODE_RIGHT]) {
+        window->PlayerMoves(keyboardState);
+      }
+
+      // Space to fire
+      if (keyboardState[SDL_SCANCODE_SPACE]) {
+        window->PlayerFires();
+      }
+      break;
+    }
+    window->Render(gameState);
   }
 
   window->Close();

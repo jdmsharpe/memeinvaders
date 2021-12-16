@@ -13,7 +13,7 @@ public:
   // Destroy window, surface, and renderer
   void Close();
   // Update entity positions and process commands
-  void Render();
+  void Render(const GameState &gameState);
 
   inline void PlayerMoves(const Uint8 *keyboardState) {
     m_player->Move(keyboardState);
