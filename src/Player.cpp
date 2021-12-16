@@ -11,8 +11,8 @@ constexpr int k_shotTimeout = 250; // ms
 
 Player::Player(SDL_Renderer *renderer) : Entity(renderer) {
   // Player should spawn in bottom-middle of screen
-  m_xPos = SCREEN_WIDTH / 2 - k_width;
-  m_yPos = SCREEN_HEIGHT - k_height;
+  SetPosition(SCREEN_WIDTH / 2 - k_width, SCREEN_HEIGHT - k_height);
+  SetVelocity(0.0, 0.0);
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
@@ -66,18 +66,18 @@ void Player::Move(const Uint8 *keyboardState) {
   // Handle all directions and bounds check
   // (rule is don't let sprite go off screen)
   if (keyboardState[SDL_SCANCODE_LEFT] && m_xPos > 0) {
-    SetVelocity(std::make_pair(-k_baseVel, 0));
+    SetVelocity(-k_baseVel, 0.0);
   }
   if (keyboardState[SDL_SCANCODE_RIGHT] &&
       m_xPos < SCREEN_WIDTH - k_width) {
-    SetVelocity(std::make_pair(k_baseVel, 0));
+    SetVelocity(k_baseVel, 0.0);
   }
   if (keyboardState[SDL_SCANCODE_UP] && m_yPos > 0) {
-    SetVelocity(std::make_pair(0, -k_baseVel));
+    SetVelocity(0.0, -k_baseVel);
   }
   if (keyboardState[SDL_SCANCODE_DOWN] &&
       m_yPos < SCREEN_HEIGHT - k_height) {
-    SetVelocity(std::make_pair(0, k_baseVel));
+    SetVelocity(0.0, k_baseVel);
   }
   UpdatePositionFromVelocity();
 }

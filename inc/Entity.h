@@ -40,14 +40,14 @@ public:
   virtual void Render() = 0;
 
 protected:
-  inline void SetPosition(std::pair<int, int> pos) {
-    m_xPos = pos.first;
-    m_yPos = pos.second;
+  inline void SetPosition(int xPos, int yPos) {
+    m_xPos = xPos;
+    m_yPos = yPos;
   }
 
-  inline void SetVelocity(std::pair<double, double> vel) {
-    m_xVel = vel.first;
-    m_yVel = vel.second;
+  inline void SetVelocity(double xVel, double yVel) {
+    m_xVel = xVel;
+    m_yVel = yVel;
   }
 
   inline void UpdatePositionFromVelocity() {

@@ -9,8 +9,8 @@ const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 Projectile::Projectile(SDL_Renderer *renderer, bool shouldBeRendered,
                        int startingX, int startingY)
     : Entity(renderer), m_shouldBeRendered(shouldBeRendered) {
-  SetPosition(std::make_pair(startingX, startingY));
-  SetVelocity(std::make_pair(0, -0.5));
+  SetPosition(startingX, startingY);
+  SetVelocity(0.0, -0.5);
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
