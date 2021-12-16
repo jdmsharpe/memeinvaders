@@ -1,8 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <vector>
-
 #include "Player.h"
 
 class Window {

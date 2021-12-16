@@ -9,7 +9,7 @@ public:
              int startingY);
   ~Projectile(){};
 
-  bool Initialize() override { return true; }
+  bool Initialize() override;
   void Render() override;
 
 private:

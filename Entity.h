@@ -3,7 +3,10 @@
 
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
+#include <string>
 #include <utility>
+
+#include "Defs.h"
 
 // Abstract class that all objects in game inherit from
 class Entity {
@@ -27,6 +30,10 @@ public:
     return std::make_pair(m_xPos, m_yPos);
   }
 
+  inline std::pair<double, double> GetVelocity() {
+    return std::make_pair(m_xVel, m_yVel);
+  }
+
   // Grab image and create texture
   virtual bool Initialize() = 0;
   // Render entity
@@ -38,13 +45,28 @@ protected:
     m_yPos = pos.second;
   }
 
+  inline void SetVelocity(std::pair<double, double> vel) {
+    m_xVel = vel.first;
+    m_yVel = vel.second;
+  }
+
+  inline void UpdatePositionFromVelocity() {
+    double xPosResult = m_xVel * DELTA_TIME;
+    double yPosResult = m_yVel * DELTA_TIME;
+    m_xPos += round(xPosResult);
+    m_yPos += round(yPosResult);
+  }
+
+  // Velocities can be double but position is cast to int to be passed into
+  // SDL_Rect
+  int m_xPos, m_yPos;
+  double m_xVel, m_yVel;
+
   SDL_Renderer *m_renderer = NULL;
   SDL_Texture *m_texture = NULL;
 
   SDL_Rect *m_screenBox = NULL;
   SDL_Rect *m_textureBox = NULL;
-
-  int m_xPos, m_yPos;
 };
 
 #endif // ENTITY_H

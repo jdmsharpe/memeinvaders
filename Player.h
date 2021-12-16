@@ -1,13 +1,16 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#define MAX_PROJECTILES 5
+
 #include <chrono>
+#include <deque>
 #include <iostream>
 #include <memory>
 #include <vector>
 
+#include "Entity.h"
 #include "Projectile.h"
-#include "ScreenDefs.h"
 
 class Player : public Entity {
 public:
@@ -25,7 +28,8 @@ public:
 
 private:
   // Stores all projectiles player can fire
-  std::vector<std::unique_ptr<Projectile>> m_projectileArray;
+  // Use unique_ptr because raw pointers scare me
+  std::deque<std::unique_ptr<Projectile>> m_projectileArray;
 
   // Keeps track of shots on screen
   int m_shotsPresent = 0;
