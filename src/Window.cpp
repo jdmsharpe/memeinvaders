@@ -11,7 +11,7 @@ bool Window::Open() {
     // Create window
     m_window = SDL_CreateWindow("MemeInvaders", SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                                SCREEN_HEIGHT, 0);
+                                SCREEN_HEIGHT, SDL_VIDEO_OPENGL);
     if (m_window == NULL) {
       std::cout << "Window could not be created. Error code: " << SDL_GetError()
                 << std::endl;
@@ -53,13 +53,21 @@ void Window::Close() {
   SDL_Quit();
 }
 
-void Window::Render() {
+void Window::Render(const GameState &gameState) {
   unsigned int frameStart = SDL_GetTicks();
 
   SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(m_renderer);
 
-  m_player->Render();
+  switch (gameState) {
+  case GameState::MAIN_MENU:
+    break;
+  case GameState::GAME_MODE_1:
+    m_player->Render();
+    break;
+  case GameState::SETTINGS:
+    break;
+  }
 
   SDL_RenderPresent(m_renderer);
 
