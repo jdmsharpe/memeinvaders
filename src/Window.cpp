@@ -17,7 +17,7 @@ bool Window::Open() {
                 << std::endl;
       return false;
     } else {
-      m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+      m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_SOFTWARE);
       // Get window surface
       m_screenSurface = SDL_GetWindowSurface(m_window);
     }
