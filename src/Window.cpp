@@ -11,7 +11,7 @@ bool Window::Open() {
     // Create window
     m_window = SDL_CreateWindow("MemeInvaders", SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-                                SCREEN_HEIGHT, SDL_VIDEO_OPENGL);
+                                SCREEN_HEIGHT, 0);
     if (m_window == NULL) {
       std::cout << "Window could not be created. Error code: " << SDL_GetError()
                 << std::endl;
