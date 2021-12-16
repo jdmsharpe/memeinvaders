@@ -1,9 +1,5 @@
 #include "Window.h"
 
-namespace {
-constexpr Uint32 k_frameDelay = 10;
-}
-
 Window::Window() {}
 
 bool Window::Open() {
@@ -69,8 +65,8 @@ void Window::Render() {
 
   unsigned int frameTime = SDL_GetTicks() - frameStart;
 
-  if (k_frameDelay > frameTime) {
+  if (DELTA_TIME > frameTime) {
     // std::cout << frameTime << std::endl;
-    SDL_Delay(k_frameDelay - frameTime);
+    SDL_Delay(DELTA_TIME - frameTime);
   }
 }
