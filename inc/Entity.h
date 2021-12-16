@@ -60,7 +60,8 @@ protected:
   // Velocities can be double but position is cast to int to be passed into
   // SDL_Rect
   int m_xPos, m_yPos;
-  double m_xVel, m_yVel;
+  double m_xVel = 0.0;
+  double m_yVel = 0.0;
 
   SDL_Renderer *m_renderer = NULL;
   SDL_Texture *m_texture = NULL;

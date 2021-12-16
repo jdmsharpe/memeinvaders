@@ -10,7 +10,7 @@ Projectile::Projectile(SDL_Renderer *renderer, bool shouldBeRendered,
                        int startingX, int startingY)
     : Entity(renderer), m_shouldBeRendered(shouldBeRendered) {
   SetPosition(startingX, startingY);
-  SetVelocity(0.0, -0.5);
+  SetVelocity(0.0, -0.75);
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
