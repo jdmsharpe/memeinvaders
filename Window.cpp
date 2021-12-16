@@ -1,7 +1,7 @@
 #include "Window.h"
 
 namespace {
-constexpr Uint32 k_frameDelay = 45;
+constexpr Uint32 k_frameDelay = 10;
 }
 
 Window::Window() {}
@@ -13,13 +13,15 @@ bool Window::Open() {
     return false;
   } else {
     // Create window
-    SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &m_window,
-                                &m_renderer);
-    if (!m_window || !m_renderer) {
-      std::cout << "Window or renderer could not be created. Error code: "
-                << SDL_GetError() << std::endl;
+    m_window = SDL_CreateWindow("MemeInvaders", SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+                                SCREEN_HEIGHT, 0);
+    if (m_window == NULL) {
+      std::cout << "Window could not be created. Error code: " << SDL_GetError()
+                << std::endl;
       return false;
     } else {
+      m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
       // Get window surface
       m_screenSurface = SDL_GetWindowSurface(m_window);
     }
