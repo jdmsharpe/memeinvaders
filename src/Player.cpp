@@ -3,9 +3,9 @@
 namespace {
 constexpr int k_width = 100;
 constexpr int k_height = 150;
-constexpr double k_baseVel = 0.25;
+constexpr double k_baseVel = 0.35;
 const std::string k_filename = "../memeinvaders/assets/player1.png";
-constexpr int k_projectileHeightLimit = -20;
+constexpr int k_projectileHeightLimit = -k_height;
 constexpr int k_shotTimeout = 250; // ms
 } // namespace
 
@@ -65,20 +65,23 @@ void Player::Render() {
 void Player::Move(const Uint8 *keyboardState) {
   // Handle all directions and bounds check
   // (rule is don't let sprite go off screen)
+  double xVelSum = 0.0;
+  double yVelSum = 0.0;
   if (keyboardState[SDL_SCANCODE_LEFT] && m_xPos > 0) {
-    SetVelocity(-k_baseVel, 0.0);
+    xVelSum -= k_baseVel;
   }
   if (keyboardState[SDL_SCANCODE_RIGHT] &&
       m_xPos < SCREEN_WIDTH - k_width) {
-    SetVelocity(k_baseVel, 0.0);
+    xVelSum += k_baseVel;
   }
   if (keyboardState[SDL_SCANCODE_UP] && m_yPos > 0) {
-    SetVelocity(0.0, -k_baseVel);
+    yVelSum -= k_baseVel;
   }
   if (keyboardState[SDL_SCANCODE_DOWN] &&
       m_yPos < SCREEN_HEIGHT - k_height) {
-    SetVelocity(0.0, k_baseVel);
+    yVelSum += k_baseVel;
   }
+  SetVelocity(xVelSum, yVelSum);
   UpdatePositionFromVelocity();
 }
 
@@ -93,7 +96,7 @@ void Player::Fire() {
       // I should do the math on this at some point so that the projectile
       // looks like it's coming out of the ship or even the missile bays
       std::unique_ptr<Projectile> newProj = std::make_unique<Projectile>(
-          m_renderer, true, m_xPos + k_width / 6, m_yPos - k_height / 4);
+          m_renderer, true, m_xPos + k_width / 2, m_yPos - k_height / 4);
       newProj->Initialize();
       // Add projectile to array for storage
       m_projectileArray.push_back(std::move(newProj));
