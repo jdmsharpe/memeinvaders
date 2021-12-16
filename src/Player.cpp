@@ -4,7 +4,7 @@ namespace {
 constexpr int k_width = 100;
 constexpr int k_height = 150;
 constexpr double k_baseVel = 0.25;
-const std::string k_filename = "../memeinvaders/player1.png";
+const std::string k_filename = "../memeinvaders/assets/player1.png";
 constexpr int k_projectileHeightLimit = -20;
 constexpr int k_shotTimeout = 250; // ms
 } // namespace
