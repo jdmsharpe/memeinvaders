@@ -1,12 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-# set the project name
+# Can increment version later, but it also doesn't really matter
 project(memeinvaders VERSION 0.01)
-
+# C++17, I guess
 set(CMAKE_CXX_STANDARD 17)
 
 include(FindPkgConfig)
-
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
@@ -16,7 +15,6 @@ file(GLOB SRC
      "src/*.cpp"
 )
 
-# add the executable
 add_executable(MemeInvaders ${SRC})
 
 target_link_libraries(MemeInvaders ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
