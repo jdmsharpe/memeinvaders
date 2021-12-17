@@ -1,17 +1,20 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
-class MainMenu : public Page {
+#include "AbstractEntity.h"
+
+class MainMenu : public AbstractEntity {
 public:
   MainMenu(SDL_Renderer *renderer);
-  ~MainMenu();
+  ~MainMenu() {};
 
   // Grab image and create texture
-  bool Initialize() override;
+  bool Initialize() override { return true; };
   // Render entity
-  void Render() override;
+  void Render() override {};
 
 private:
-}
+
+};
 
 #endif // MAINMENU_H

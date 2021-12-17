@@ -9,10 +9,10 @@
 #include <memory>
 #include <vector>
 
-#include "Entity.h"
+#include "DynamicEntity.h"
 #include "Projectile.h"
 
-class Enemy : public Entity {
+class Enemy : public DynamicEntity {
 public:
   Enemy(SDL_Renderer *renderer);
   ~Enemy();

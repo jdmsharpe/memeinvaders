@@ -1,5 +1,3 @@
 #include "MainMenu.h"
 
-MainMenu::MainMenu(SDL_Renderer *renderer) : m_renderer(renderer) {
-
-}
+MainMenu::MainMenu(SDL_Renderer *renderer) : AbstractEntity(renderer) {}

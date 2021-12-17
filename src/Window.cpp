@@ -28,6 +28,7 @@ bool Window::Open() {
     std::cout << "Failed to initialize player!" << std::endl;
     return false;
   }
+
   m_enemy = new Enemy(m_renderer);
   if (!m_enemy->Initialize()) {
     std::cout << "Failed to initialize enemy!" << std::endl;
