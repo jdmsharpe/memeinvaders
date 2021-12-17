@@ -4,6 +4,7 @@ namespace {
 constexpr int k_width = 100;
 constexpr int k_height = 150;
 constexpr double k_baseVel = 0.1;
+constexpr double k_baseVely = 5;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = -k_height;
 constexpr int k_maxProjectiles = 2;
@@ -65,6 +66,7 @@ void Enemy::Render() {
 }
 bool hit_left = false;
 bool hit_right = true;
+int y_counter = 0;
 void Enemy::Move() {
         // Handle all directions and bounds check
         // (rule is don't let sprite go off screen)
@@ -78,6 +80,7 @@ void Enemy::Move() {
                         //Hit left wall
                         xVelSum -= k_baseVel;
                         if (m_xPos == 1) {
+                                yVelSum += k_baseVely;
                                 hit_left = true;
                                 hit_right = false;
                         }
@@ -90,6 +93,7 @@ void Enemy::Move() {
                 if (hit_left == true) {
                         xVelSum += k_baseVel;
                         if (m_xPos == SCREEN_WIDTH - k_width - 1) {
+                                yVelSum += k_baseVely;
                                 hit_left = false;
                                 hit_right = true;
                         }
