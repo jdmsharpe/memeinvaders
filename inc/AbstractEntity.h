@@ -12,7 +12,8 @@
 // Has associated texture to render sprite to screen.
 class AbstractEntity {
 public:
-  AbstractEntity(SDL_Renderer *renderer) : m_renderer(renderer) {}
+  AbstractEntity(SDL_Renderer *renderer, std::string name)
+      : m_renderer(renderer), m_name(name) {}
 
   ~AbstractEntity() {
     // Clean up boxes
@@ -27,6 +28,8 @@ public:
     m_texture = NULL;
   };
 
+  std::string GetName() { return m_name; }
+
   // Grab image and create texture
   virtual bool Initialize() = 0;
   // Render entity
@@ -38,6 +41,8 @@ protected:
 
   SDL_Rect *m_screenBox = NULL;
   SDL_Rect *m_textureBox = NULL;
+
+  std::string m_name;
 };
 
 #endif // ABSTRACT_ENTITY_H
