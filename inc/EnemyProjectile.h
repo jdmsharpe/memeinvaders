@@ -1,13 +1,13 @@
 #ifndef PROJECTILE_H
 #define PROJECTILE_H
 
-#include "Entity.h"
+#include "DynamicEntity.h"
 
-class Projectile : public Entity {
+class EnemyProjectile : public DynamicEntity {
 public:
-  Projectile(SDL_Renderer *renderer, bool shouldBeRendered, int startingX,
+  EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered, int startingX,
              int startingY);
-  ~Projectile(){};
+  ~EnemyProjectile(){};
 
   bool Initialize() override;
   void Render() override;

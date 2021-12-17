@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "Enemy.h"
 
+// Owns all in-game entities and is in charge of rendering
+// and displaying said entities to screen.
 class Window {
 public:
   Window();
@@ -41,7 +43,6 @@ private:
 
   // The player
   Enemy *m_enemy = nullptr;
-
 };
 
 #endif // WINDOW_H
