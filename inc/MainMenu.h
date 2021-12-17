@@ -3,6 +3,7 @@
 
 #include "AbstractEntity.h"
 
+// Entity rendered when the current game state is MAINMENU.
 class MainMenu : public AbstractEntity {
 public:
   MainMenu(SDL_Renderer *renderer);
