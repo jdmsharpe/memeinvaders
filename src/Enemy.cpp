@@ -6,6 +6,7 @@ constexpr int k_height = 150;
 constexpr double k_baseVel = 0.1;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = -k_height;
+constexpr int k_maxProjectiles = 2;
 constexpr int k_shotTimeout = 1000; // ms
 } // namespace
 
@@ -92,7 +93,7 @@ void Enemy::Move() {
 
 // void Enemy::Fire() {
 //   // Make sure we're not going over cap
-//   if (m_shotsPresent <= MAX_PROJECTILES) {
+//   if (m_shotsPresent <= k_maxProjectiles) {
 //     // Check last time we fired to slow things down a bit
 //     auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
 //         Clock::now() - m_lastFire);

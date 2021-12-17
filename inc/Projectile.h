@@ -3,6 +3,7 @@
 
 #include "DynamicEntity.h"
 
+// Entity owned by player/enemy that represents a fired shot.
 class Projectile : public DynamicEntity {
 public:
   Projectile(SDL_Renderer *renderer, bool shouldBeRendered, int startingX,
