@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "Player.h"
+#include "Enemy.h"
 
 class Window {
 public:
@@ -18,7 +19,9 @@ public:
   inline void PlayerMoves(const Uint8 *keyboardState) {
     m_player->Move(keyboardState);
   }
-
+  inline void EnemyMoves() {
+    m_enemy->Move();
+  }
   inline void PlayerFires() {
     m_player->Fire();
   }
@@ -35,6 +38,10 @@ private:
 
   // The player
   Player *m_player = nullptr;
+
+  // The player
+  Enemy *m_enemy = nullptr;
+
 };
 
 #endif // WINDOW_H

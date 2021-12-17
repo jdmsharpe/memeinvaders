@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
           keyboardState[SDL_SCANCODE_LEFT] || keyboardState[SDL_SCANCODE_RIGHT]) {
         window->PlayerMoves(keyboardState);
       }
-
+      window->EnemyMoves();
       // Space to fire
       if (keyboardState[SDL_SCANCODE_SPACE]) {
         window->PlayerFires();
