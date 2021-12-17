@@ -28,7 +28,11 @@ bool Window::Open() {
     std::cout << "Failed to initialize player!" << std::endl;
     return false;
   }
-
+  m_enemy = new Enemy(m_renderer);
+  if (!m_enemy->Initialize()) {
+    std::cout << "Failed to initialize enemy!" << std::endl;
+    return false;
+  }
   return true;
 }
 
@@ -36,6 +40,10 @@ void Window::Close() {
   // Delete player
   delete m_player;
   m_player = nullptr;
+
+  // Delete enemy
+  delete m_enemy;
+  m_enemy = nullptr;
 
   // Destroy renderer
   SDL_DestroyRenderer(m_renderer);
@@ -64,6 +72,7 @@ void Window::Render(const GameState &gameState) {
     break;
   case GameState::GAME_MODE_1:
     m_player->Render();
+    m_enemy->Render();
     break;
   case GameState::SETTINGS:
     break;
