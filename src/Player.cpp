@@ -6,10 +6,11 @@ constexpr int k_height = 150;
 constexpr double k_baseVel = 0.35;
 const std::string k_filename = "../memeinvaders/assets/player1.png";
 constexpr int k_projectileHeightLimit = -k_height;
+constexpr int k_maxProjectiles = 5;
 constexpr int k_shotTimeout = 250; // ms
 } // namespace
 
-Player::Player(SDL_Renderer *renderer) : Entity(renderer) {
+Player::Player(SDL_Renderer *renderer) : DynamicEntity(renderer) {
   // Player should spawn in bottom-middle of screen
   SetPosition(SCREEN_WIDTH / 2 - k_width, SCREEN_HEIGHT - k_height);
   SetVelocity(0.0, 0.0);
@@ -87,7 +88,7 @@ void Player::Move(const Uint8 *keyboardState) {
 
 void Player::Fire() {
   // Make sure we're not going over cap
-  if (m_shotsPresent <= MAX_PROJECTILES) {
+  if (m_shotsPresent <= k_maxProjectiles) {
     // Check last time we fired to slow things down a bit
     auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         Clock::now() - m_lastFire);

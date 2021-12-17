@@ -1,18 +1,17 @@
 #ifndef ENEMY_H
 #define ENEMY_H
 
-#define MAX_PROJECTILES_ENEMY 2
-
 #include <chrono>
 #include <deque>
 #include <iostream>
 #include <memory>
 #include <vector>
 
-#include "Entity.h"
+#include "DynamicEntity.h"
 #include "Projectile.h"
 
-class Enemy : public Entity {
+// Entity that serves as enemy to player.
+class Enemy : public DynamicEntity {
 public:
   Enemy(SDL_Renderer *renderer);
   ~Enemy();
