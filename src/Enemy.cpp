@@ -70,7 +70,7 @@ void Enemy::Move() {
   double yVelSum = 0.0;
   bool hit = false;
 
-  
+
   if (m_xPos > 0 && hit == true) {
     hit = true;
     xVelSum -= k_baseVel;
