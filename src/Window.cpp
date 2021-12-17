@@ -11,7 +11,7 @@ std::unique_ptr<T> CreateAndInitialize(SDL_Renderer *renderer) {
   }
   return std::move(toReturn);
 }
-} // namespace
+} // namespace test
 
 Window::Window() {}
 
