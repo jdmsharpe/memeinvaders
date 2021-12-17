@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     switch (gameState) {
     case GameState::MAIN_MENU:
       // Space to exit for now
-      if (keyboardState[SDL_SCANCODE_SPACE]) {
+      if (keyboardState[SDL_SCANCODE_RETURN]) {
         gameState = GameState::GAME_MODE_1;
       }
       break;
