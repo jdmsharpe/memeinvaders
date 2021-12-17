@@ -6,9 +6,9 @@ constexpr int k_height = 150;
 constexpr double k_baseVel = 0.1;
 constexpr double k_baseVely = 5;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
-constexpr int k_projectileHeightLimit = -k_height;
-constexpr int k_maxProjectiles = 2;
-constexpr int k_shotTimeout = 1000;         // ms
+constexpr int k_projectileHeightLimit = k_height;
+constexpr int k_maxProjectiles = 5;
+constexpr int k_shotTimeout = 250;         // ms
 } // namespace
 
 Enemy::Enemy(SDL_Renderer *renderer) : DynamicEntity(renderer, "enemy") {
@@ -54,19 +54,17 @@ void Enemy::Render() {
         m_textureBox->y = m_yPos;
 
         // Take care of rendering and destroying shots
-        // for (int i = 0; i < m_shotsPresent; ++i) {
-        //   // If projectile is at top of screen, delete it and decrement shots present
-        //   if (m_projectileArray[i]->GetPosition().second < k_projectileHeightLimit) {
-        //     m_projectileArray.erase(m_projectileArray.begin() + i);
-        //     m_shotsPresent--;
-        //   } else {
-        //     m_projectileArray[i]->Render();
-        //   }
-        // }
+        for (int i = 0; i < m_shotsPresent; ++i) {
+          // If projectile is at bot of screen, delete it and decrement shots present
+          if (m_projectileArray[i]->GetPosition().second < k_projectileHeightLimit) {
+            m_projectileArray.erase(m_projectileArray.begin() + i);
+            m_shotsPresent--;
+          } else {
+            m_projectileArray[i]->Render();
+          }
+        }
 }
-bool hit_left = false;
-bool hit_right = true;
-int y_counter = 0;
+
 void Enemy::Move() {
         // Handle all directions and bounds check
         // (rule is don't let sprite go off screen)
@@ -111,23 +109,26 @@ void Enemy::Move() {
         UpdatePositionFromVelocity();
 }
 
-// void Enemy::Fire() {
-//   // Make sure we're not going over cap
-//   if (m_shotsPresent <= k_maxProjectiles) {
-//     // Check last time we fired to slow things down a bit
-//     auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
-//         Clock::now() - m_lastFire);
-//     if (timeElapsed.count() >= k_shotTimeout) {
-//       m_lastFire = Clock::now();
-//       // I should do the math on this at some point so that the projectile
-//       // looks like it's coming out of the ship or even the missile bays
-//       std::unique_ptr<Projectile> newProj = std::make_unique<Projectile>(
-//           m_renderer, true, m_xPos + k_width / 2, m_yPos - k_height / 4);
-//       newProj->Initialize();
-//       // Add projectile to array for storage
-//       m_projectileArray.push_back(std::move(newProj));
-//       // Store total number on screen
-//       m_shotsPresent = static_cast<int>(m_projectileArray.size());
-//     }
-//   }
-// }
+void Enemy::Fire() {
+
+  // Make sure we're not going over cap
+  if (m_shotsPresent <= k_maxProjectiles) {
+    // Check last time we fired to slow things down a bit
+    auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
+        Clock::now() - m_lastFire);
+    if (timeElapsed.count() >= k_shotTimeout) {
+      m_lastFire = Clock::now();
+      // I should do the math on this at some point so that the projectile
+      // looks like it's coming out of the ship or even the missile bays
+
+      std::unique_ptr<EnemyProjectile> newProj = std::make_unique<EnemyProjectile>(
+          m_renderer, true, m_xPos + k_width / 2, m_yPos + k_height / 10);
+      newProj->Initialize();
+
+      // Add projectile to array for storage
+      m_projectileArray.push_back(std::move(newProj));
+      // Store total number on screen
+      m_shotsPresent = static_cast<int>(m_projectileArray.size());
+    }
+  }
+}
