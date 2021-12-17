@@ -69,9 +69,9 @@ void Enemy::Move() {
   double yVelSum = 0.0;
   bool hit = false;
 
-  
+
   if (m_xPos > 0 && hit == true) {
-    hit = true
+    hit = true;
     xVelSum -= k_baseVel;
   } else if (m_xPos < SCREEN_WIDTH && hit == false) {
     //hit = false;
