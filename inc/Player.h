@@ -1,8 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#define MAX_PROJECTILES 5
-
 #include <chrono>
 #include <deque>
 #include <iostream>
@@ -12,6 +10,7 @@
 #include "DynamicEntity.h"
 #include "Projectile.h"
 
+// Entity controlled by player during gameplay.
 class Player : public DynamicEntity {
 public:
   Player(SDL_Renderer *renderer);

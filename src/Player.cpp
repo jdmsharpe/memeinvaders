@@ -10,7 +10,7 @@ constexpr int k_maxProjectiles = 5;
 constexpr int k_shotTimeout = 250; // ms
 } // namespace
 
-Player::Player(SDL_Renderer *renderer) : DynamicEntity(renderer) {
+Player::Player(SDL_Renderer *renderer) : DynamicEntity(renderer, "player") {
   // Player should spawn in bottom-middle of screen
   SetPosition(SCREEN_WIDTH / 2 - k_width, SCREEN_HEIGHT - k_height);
   SetVelocity(0.0, 0.0);

@@ -1,5 +1,18 @@
 #include "Window.h"
 
+namespace {
+template <class T>
+std::unique_ptr<T> CreateAndInitialize(SDL_Renderer *renderer) {
+  std::unique_ptr<T> toReturn = std::make_unique<T>(renderer);
+  if (!toReturn->Initialize()) {
+    std::cout << "Failed to initialize " << toReturn->GetName() << "!"
+              << std::endl;
+    return nullptr;
+  }
+  return std::move(toReturn);
+}
+} // namespace
+
 Window::Window() {}
 
 bool Window::Open() {
@@ -18,58 +31,41 @@ bool Window::Open() {
       return false;
     } else {
       m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_SOFTWARE);
-      // Get window surface
       m_screenSurface = SDL_GetWindowSurface(m_window);
     }
   }
 
-  m_player = new Player(m_renderer);
-  if (!m_player->Initialize()) {
-    std::cout << "Failed to initialize player!" << std::endl;
-    return false;
-  }
+  m_mainMenu = CreateAndInitialize<MainMenu>(m_renderer);
+  m_player = CreateAndInitialize<Player>(m_renderer);
+  m_enemy = CreateAndInitialize<Enemy>(m_renderer);
 
-  m_enemy = new Enemy(m_renderer);
-  if (!m_enemy->Initialize()) {
-    std::cout << "Failed to initialize enemy!" << std::endl;
-    return false;
-  }
   return true;
 }
 
 void Window::Close() {
-  // Delete player
-  delete m_player;
-  m_player = nullptr;
-
-  // Delete enemy
-  delete m_enemy;
-  m_enemy = nullptr;
-
-  // Destroy renderer
+  // Clean up all entities and SDL objects
   SDL_DestroyRenderer(m_renderer);
   m_renderer = NULL;
 
-  // Deallocate surface
   SDL_FreeSurface(m_screenSurface);
   m_screenSurface = NULL;
 
-  // Destroy window
   SDL_DestroyWindow(m_window);
   m_window = NULL;
 
-  // Quit SDL subsystems
   SDL_Quit();
 }
 
 void Window::Render(const GameState &gameState) {
   unsigned int frameStart = SDL_GetTicks();
 
+  // Black background
   SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
   SDL_RenderClear(m_renderer);
 
   switch (gameState) {
   case GameState::MAIN_MENU:
+    // m_mainMenu->Render();
     break;
   case GameState::GAME_MODE_1:
     m_player->Render();
@@ -83,6 +79,8 @@ void Window::Render(const GameState &gameState) {
 
   unsigned int frameTime = SDL_GetTicks() - frameStart;
 
+  // If actual time taken is less than defined frame time,
+  // wait a bit until they're equal (fixed framerate)
   if (DELTA_TIME > frameTime) {
     // std::cout << frameTime << std::endl;
     SDL_Delay(DELTA_TIME - frameTime);

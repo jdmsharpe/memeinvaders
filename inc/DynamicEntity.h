@@ -7,7 +7,8 @@
 // positions and velocities.
 class DynamicEntity : public AbstractEntity {
 public:
-  DynamicEntity(SDL_Renderer *renderer) : AbstractEntity(renderer) {}
+  DynamicEntity(SDL_Renderer *renderer, std::string name)
+      : AbstractEntity(renderer, name) {}
 
   ~DynamicEntity() {}
 

@@ -8,7 +8,8 @@ constexpr int k_height = 75;
 
 Projectile::Projectile(SDL_Renderer *renderer, bool shouldBeRendered,
                        int startingX, int startingY)
-    : DynamicEntity(renderer), m_shouldBeRendered(shouldBeRendered) {
+    : DynamicEntity(renderer, "projectile"),
+      m_shouldBeRendered(shouldBeRendered) {
   SetPosition(startingX, startingY);
   SetVelocity(0.0, -0.75);
 

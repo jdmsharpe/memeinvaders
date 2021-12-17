@@ -1,8 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "Player.h"
 #include "Enemy.h"
+#include "MainMenu.h"
+#include "Player.h"
 
 // Owns all in-game entities and is in charge of rendering
 // and displaying said entities to screen.
@@ -29,20 +30,13 @@ public:
   }
 
 private:
-  // The window we'll be rendering to
   SDL_Window *m_window = NULL;
-
-  // The surface contained by the window
   SDL_Surface *m_screenSurface = NULL;
-
-  // The renderer
   SDL_Renderer *m_renderer = NULL;
 
-  // The player
-  Player *m_player = nullptr;
-
-  // The player
-  Enemy *m_enemy = nullptr;
+  std::unique_ptr<Player> m_player = nullptr;
+  std::unique_ptr<Enemy> m_enemy = nullptr;
+  std::unique_ptr<MainMenu> m_mainMenu = nullptr;
 };
 
 #endif // WINDOW_H
