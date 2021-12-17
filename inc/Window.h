@@ -4,6 +4,8 @@
 #include "Enemy.h"
 #include "MainMenu.h"
 #include "Player.h"
+#include <chrono>
+#include <thread>
 
 // Owns all in-game entities and is in charge of rendering
 // and displaying said entities to screen.
@@ -27,6 +29,11 @@ public:
   }
   inline void PlayerFires() {
     m_player->Fire();
+  }
+  inline void EnemyFires() {
+    m_enemy->Fire();
+    // std::chrono::milliseconds timespan(1000); // or whatever
+    // std::this_thread::sleep_for(timespan);
   }
 
 private:

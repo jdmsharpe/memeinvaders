@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "DynamicEntity.h"
-#include "Projectile.h"
+#include "EnemyProjectile.h"
 
 // Entity that serves as enemy to player.
 class Enemy : public DynamicEntity {
@@ -28,11 +28,16 @@ public:
 private:
   // Stores all projectiles enemy can fire
   // Use unique_ptr because raw pointers scare me
-  //std::deque<std::unique_ptr<Projectile>> m_projectileArray;
+  std::deque<std::unique_ptr<EnemyProjectile>> m_projectileArray;
 
   // Keeps track of shots on screen
-  //int m_shotsPresent = 0;
+  int m_shotsPresent = 0;
 
+  //movement tracker
+  bool hit_left = false;
+  bool hit_right = true;
+  int y_counter = 0;
+  
   using Clock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<Clock>;
 

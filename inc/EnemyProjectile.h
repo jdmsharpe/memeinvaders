@@ -1,6 +1,6 @@
-#ifndef PROJECTILE_H
-#define PROJECTILE_H
-
+#ifndef ENEMYPROJECTILE_H
+#define ENEMYPROJECTILE_H
+#include <iostream>
 #include "DynamicEntity.h"
 
 class EnemyProjectile : public DynamicEntity {
@@ -13,7 +13,7 @@ public:
   void Render() override;
 
 private:
-  bool m_shouldBeRendered = false;
+  bool m_shouldBeRendered = true;
 };
 
 #endif // PROJECTILE_H
