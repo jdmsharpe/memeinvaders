@@ -38,7 +38,7 @@ bool Player::Initialize() {
   SDL_Surface *surface = IMG_Load(k_filename.c_str());
   if (surface == NULL) {
     SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-                 "Unable to load image %s! Error code: %s.", k_filename,
+                 "Unable to load image %s! Error code: %s.", k_filename.c_str(),
                  SDL_GetError());
     return false;
   }
