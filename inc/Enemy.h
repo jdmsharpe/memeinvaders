@@ -20,7 +20,7 @@ public:
   bool Initialize() override;
   // Render entity
   void Render() override;
-  // Process keyboard input
+  // Perform predefined movement
   void Move();
   // Fire projectile
   void Fire();
@@ -45,4 +45,4 @@ private:
   TimePoint m_lastFire;
 };
 
-#endif // PLAYER_H
+#endif // ENEMY_H

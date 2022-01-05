@@ -8,7 +8,8 @@ class Projectile : public DynamicEntity {
 public:
   Projectile(SDL_Renderer *renderer, bool shouldBeRendered, int startingX,
              int startingY);
-  ~Projectile(){};
+
+  ~Projectile() {}
 
   bool Initialize() override;
   void Render() override;

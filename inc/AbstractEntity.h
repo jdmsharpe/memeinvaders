@@ -26,7 +26,7 @@ public:
     // Clean up texture
     SDL_DestroyTexture(m_texture);
     m_texture = NULL;
-  };
+  }
 
   std::string GetName() { return m_name; }
 
