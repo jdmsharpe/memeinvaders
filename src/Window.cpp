@@ -5,8 +5,8 @@ template <class T>
 std::unique_ptr<T> CreateAndInitialize(SDL_Renderer *renderer) {
   std::unique_ptr<T> toReturn = std::make_unique<T>(renderer);
   if (!toReturn->Initialize()) {
-    std::cout << "Failed to initialize " << toReturn->GetName() << "!"
-              << std::endl;
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initialize %s!",
+                 toReturn->GetName());
     return nullptr;
   }
   return std::move(toReturn);
@@ -17,8 +17,8 @@ Window::Window() {}
 
 bool Window::Open() {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    std::cout << "SDL could not initialize! SDL_Error: " << SDL_GetError()
-              << std::endl;
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+                 "SDL could not initialize! Error code: %s.", SDL_GetError());
     return false;
   } else {
     // Create window
@@ -26,9 +26,9 @@ bool Window::Open() {
                                 SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
                                 SCREEN_HEIGHT, 0);
     if (m_window == NULL) {
-      std::cout << "Window could not be created. Error code: " << SDL_GetError()
-                << std::endl;
-      return false;
+      SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+                   "Window could not be created. Error code: %s.",
+                   SDL_GetError());
     } else {
       m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_SOFTWARE);
       m_screenSurface = SDL_GetWindowSurface(m_window);
@@ -83,7 +83,7 @@ void Window::Render(const GameState &gameState) {
   // wait a bit until they're equal (fixed framerate)
   if (DELTA_TIME > frameTime) {
     // Debug print to check actual elapsed time
-    //std::cout << frameTime << std::endl;
+    // SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Elapsed frame time was %d ms.", frameTime);
     SDL_Delay(DELTA_TIME - frameTime);
   }
 }

@@ -22,20 +22,22 @@ MainMenu::~MainMenu() {}
 bool MainMenu::Initialize() {
   // Something really went wrong
   if (m_renderer == NULL) {
-    std::cout << "MainMenu pointer to renderer was NULL!" << std::endl;
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+                 "MainMenu pointer to renderer was NULL!");
     return false;
   }
 
   if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
-    std::cout << "SDL_Image could not initialize!" << std::endl;
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR, "SDL_Image could not initialize!");
     return false;
   }
 
   // Load image and create texture
   SDL_Surface *surface = IMG_Load(k_filename.c_str());
   if (surface == NULL) {
-    std::cout << "Unable to load image " << k_filename
-              << "! SDL Error: " << SDL_GetError() << std::endl;
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+                 "Unable to load image %s! Error code: %s.", k_filename,
+                 SDL_GetError());
     return false;
   }
 
