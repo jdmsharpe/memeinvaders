@@ -28,10 +28,11 @@ int main(int argc, char *argv[]) {
     // Get all keys currently pressed
     const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
-    // Change between game states on player input
+    // Pseudo-state machine to handle switching between game states
+    // Should probably be cleaned up at some point (or just not be in main)
     switch (gameState) {
     case GameState::MAIN_MENU:
-      // Space to exit for now
+      // Enter to exit for now
       if (keyboardState[SDL_SCANCODE_RETURN]) {
         gameState = GameState::GAME_MODE_1;
       }

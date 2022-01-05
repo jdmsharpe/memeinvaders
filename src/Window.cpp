@@ -65,7 +65,7 @@ void Window::Render(const GameState &gameState) {
 
   switch (gameState) {
   case GameState::MAIN_MENU:
-    // m_mainMenu->Render();
+    m_mainMenu->Render();
     break;
   case GameState::GAME_MODE_1:
     m_player->Render();
