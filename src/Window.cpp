@@ -82,7 +82,8 @@ void Window::Render(const GameState &gameState) {
   // If actual time taken is less than defined frame time,
   // wait a bit until they're equal (fixed framerate)
   if (DELTA_TIME > frameTime) {
-    // std::cout << frameTime << std::endl;
+    // Debug print to check actual elapsed time
+    //std::cout << frameTime << std::endl;
     SDL_Delay(DELTA_TIME - frameTime);
   }
 }
