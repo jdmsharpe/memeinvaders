@@ -9,7 +9,6 @@ class EnemyProjectile : public DynamicEntity {
 public:
   EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered, int startingX,
              int startingY);
-
   ~EnemyProjectile() {}
 
   bool Initialize() override;
