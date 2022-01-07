@@ -1,19 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
 
-# Can increment version later, but it also doesn't really matter
+# Can increment version later if desired
 project(memeinvaders VERSION 0.01)
 # C++20 because new tech!!!
 set(CMAKE_CXX_STANDARD 20)
+# Set to optimized debug, comment out to disable
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 include(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 
+# Include all .h files and library headers
 include_directories(${PROJECT_SOURCE_DIR}/inc ${SDL2_INCLUDE_DIRS} ${SDL2IMAGE_INCLUDE_DIRS})
 
-file(GLOB SRC
-     "src/*.cpp"
-)
+# Include all .cpp files
+file(GLOB SRC "src/*.cpp")
 
 add_executable(MemeInvaders ${SRC})
 
