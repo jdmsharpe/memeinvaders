@@ -1,0 +1,30 @@
+{
+    // This only applies if using VSCode
+    // Edit this file as directed to be able use debugging
+    // Once you're done editing, rename this file to "launch.json"
+    // and you'll be able to debug the program as normal
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "MemeInvaders Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            // Edit the path below to match your system's
+            "program": "<full-path-to-build-folder>/MemeInvaders",
+            "args": [],
+            "stopAtEntry": false,
+            // This path too
+            "cwd": "<full-path-to-build-folder>",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}
