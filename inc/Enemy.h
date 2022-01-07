@@ -4,7 +4,6 @@
 #include <chrono>
 #include <deque>
 #include <iostream>
-#include <memory>
 #include <vector>
 
 #include "DynamicEntity.h"
@@ -25,11 +24,11 @@ public:
   // Fire projectile
   void Fire();
 
-private:
   // Stores all projectiles enemy can fire
   // Use unique_ptr because raw pointers scare me
   std::deque<std::unique_ptr<EnemyProjectile>> m_projectileArray;
 
+private:
   // Keeps track of shots on screen
   int m_shotsPresent = 0;
 

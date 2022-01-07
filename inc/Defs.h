@@ -18,4 +18,14 @@ enum GameState {
     SETTINGS = 2
 };
 
+// Bounding box definition
+struct BoundingBox {
+  BoundingBox(int x, int y, int w, int h)
+      : left(x), right(x + w), top(y), bottom(y + h) {}
+  int left;
+  int right;
+  int top;
+  int bottom;
+};
+
 #endif // DEFS_H

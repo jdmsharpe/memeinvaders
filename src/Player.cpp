@@ -10,7 +10,8 @@ constexpr int k_maxProjectiles = 5;
 constexpr int k_shotTimeout = 250; // ms
 } // namespace
 
-Player::Player(SDL_Renderer *renderer) : DynamicEntity(renderer, "player") {
+Player::Player(SDL_Renderer *renderer)
+    : DynamicEntity(renderer, "player", k_width, k_height) {
   // Player should spawn in bottom-middle of screen
   SetPosition(SCREEN_WIDTH / 2 - k_width, SCREEN_HEIGHT - k_height);
   SetVelocity(0.0, 0.0);
@@ -55,6 +56,10 @@ void Player::Render() {
 
   // Take care of rendering and destroying shots
   for (int i = 0; i < m_shotsPresent; ++i) {
+    // If projectile destroys something its entry will be nulled, so skip
+    if (!m_projectileArray[i]) {
+      continue;
+    }
     // If projectile is at top of screen, delete it and decrement shots present
     if (m_projectileArray[i]->GetPosition().second < k_projectileHeightLimit) {
       m_projectileArray.erase(m_projectileArray.begin() + i);

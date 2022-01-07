@@ -1,6 +1,7 @@
 #ifndef ABSTRACT_ENTITY_H
 #define ABSTRACT_ENTITY_H
 
+#include <memory>
 #include <SDL2/SDL.h>
 #include <SDL_image.h>
 #include <string>
