@@ -8,10 +8,11 @@ constexpr double k_baseVely = 5;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = k_height;
 constexpr int k_maxProjectiles = 5;
-constexpr int k_shotTimeout = 250; // ms
+constexpr int k_shotTimeout = 500; // ms
 } // namespace
 
-Enemy::Enemy(SDL_Renderer *renderer) : DynamicEntity(renderer, "enemy") {
+Enemy::Enemy(SDL_Renderer *renderer)
+    : DynamicEntity(renderer, "enemy", k_width, k_height) {
   // Enemy should spawn in bottom-middle of screen
   SetPosition(SCREEN_WIDTH / 2, 0);
   SetVelocity(0.0, 0.0);
@@ -56,6 +57,10 @@ void Enemy::Render() {
 
   // Take care of rendering and destroying shots
   for (int i = 0; i < m_shotsPresent; ++i) {
+    // If projectile destroys something its entry will be nulled, so skip
+    if (!m_projectileArray[i]) {
+      continue;
+    }
     // If projectile is at bottom of screen, delete it and decrement shots present
     if (m_projectileArray[i]->GetPosition().second > SCREEN_HEIGHT) {
       m_projectileArray.erase(m_projectileArray.begin() + i);

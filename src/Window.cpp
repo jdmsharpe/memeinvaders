@@ -6,7 +6,7 @@ std::unique_ptr<T> CreateAndInitialize(SDL_Renderer *renderer) {
   std::unique_ptr<T> toReturn = std::make_unique<T>(renderer);
   if (!toReturn->Initialize()) {
     SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initialize %s!",
-                 toReturn->GetName());
+                 toReturn->GetName().c_str());
     return nullptr;
   }
   return std::move(toReturn);
@@ -68,8 +68,17 @@ void Window::Render(const GameState &gameState) {
     m_mainMenu->Render();
     break;
   case GameState::GAME_MODE_1:
-    m_player->Render();
-    m_enemy->Render();
+    // Don't render what doesn't exist
+    // Would be cool to have a macro for this
+    if (m_player) {
+      m_player->Render();
+    }
+    if (m_enemy) {
+      m_enemy->Render();
+    }
+    if (m_player && m_enemy) {
+      CollisionDetection();
+    }
     break;
   case GameState::SETTINGS:
     break;
@@ -83,7 +92,56 @@ void Window::Render(const GameState &gameState) {
   // wait a bit until they're equal (fixed framerate)
   if (DELTA_TIME > frameTime) {
     // Debug print to check actual elapsed time
-    // SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Elapsed frame time was %d ms.", frameTime);
+    // SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Elapsed frame time was %d
+    // ms.", frameTime);
     SDL_Delay(DELTA_TIME - frameTime);
+  }
+}
+
+void Window::CollisionDetection() {
+  // Initialize flags and get bounding box shorthands
+  bool killPlayer = false;
+  bool killEnemy = false;
+  BoundingBox *playerBox = m_player->GetBoundingBox();
+  BoundingBox *enemyBox = m_enemy->GetBoundingBox();
+
+  // Loop through all player-filed projectiles and check for enemy collision
+  // TODO: need extra for-loop to account for multiple enemies
+  for (int i = 0; i < (int)m_player->m_projectileArray.size(); i++) {
+    BoundingBox *projectileBox =
+        m_player->m_projectileArray[i]->GetBoundingBox();
+    // Separating axis test
+    if (enemyBox->bottom > projectileBox->top &&
+        enemyBox->top < projectileBox->bottom &&
+        enemyBox->right > projectileBox->left &&
+        enemyBox->left < projectileBox->right) {
+      killEnemy = true;
+      // Delete projectile
+      m_player->m_projectileArray[i].reset();
+    }
+  }
+
+  // Loop through all enemy-fired projectiles and check for enemy collision
+  // TODO: need extra for-loop to account for multiple enemies
+  for (int j = 0; j < (int)m_enemy->m_projectileArray.size(); j++) {
+    BoundingBox *enemyProjectileBox =
+        m_enemy->m_projectileArray[j]->GetBoundingBox();
+    // Separating axis test
+    if (playerBox->bottom > enemyProjectileBox->top &&
+        playerBox->top < enemyProjectileBox->bottom &&
+        playerBox->right > enemyProjectileBox->left &&
+        playerBox->left < enemyProjectileBox->right) {
+      killPlayer = true;
+      // Delete projectile
+      m_enemy->m_projectileArray[j].reset();
+    }
+  }
+
+  if (killPlayer) {
+    m_player.reset();
+  }
+
+  if (killEnemy) {
+    m_enemy.reset();
   }
 }

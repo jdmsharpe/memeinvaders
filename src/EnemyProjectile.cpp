@@ -2,14 +2,14 @@
 
 namespace {
 // Make it a bit smaller than the player's for now
-constexpr int k_width = 50;
+constexpr int k_width = 1;
 constexpr int k_height = 50;
 // const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 } // namespace
 
 EnemyProjectile::EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered,
                        int startingX, int startingY)
-    : DynamicEntity(renderer, "projectile"),
+    : DynamicEntity(renderer, "projectile", k_width, k_height),
       m_shouldBeRendered(shouldBeRendered) {
   // Offset position so it looks like it's coming out of the enemy
   SetPosition(startingX, startingY + k_height);

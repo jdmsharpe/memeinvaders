@@ -7,8 +7,11 @@
 // positions and velocities.
 class DynamicEntity : public AbstractEntity {
 public:
-  DynamicEntity(SDL_Renderer *renderer, std::string name)
-      : AbstractEntity(renderer, name) {}
+  DynamicEntity(SDL_Renderer *renderer, std::string name, int width, int height)
+      : AbstractEntity(renderer, name), m_width(width), m_height(height) {
+    m_boundingBox =
+        std::make_unique<BoundingBox>(m_xPos, m_yPos, m_width, m_height);
+  }
 
   ~DynamicEntity() {}
 
@@ -18,6 +21,14 @@ public:
 
   inline std::pair<double, double> GetVelocity() {
     return std::make_pair(m_xVel, m_yVel);
+  }
+
+  inline BoundingBox* GetBoundingBox() {
+    m_boundingBox->left = m_xPos;
+    m_boundingBox->right = m_xPos + m_width;
+    m_boundingBox->top = m_yPos;
+    m_boundingBox->bottom = m_yPos + m_height;
+    return m_boundingBox.get();
   }
 
 protected:
@@ -37,6 +48,9 @@ protected:
     m_xPos += round(xPosResult);
     m_yPos += round(yPosResult);
   }
+
+  int m_width, m_height;
+  std::unique_ptr<BoundingBox> m_boundingBox;
 
   // Velocities can be double but position is cast to int to be passed into
   // SDL_Rect

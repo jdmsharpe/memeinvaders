@@ -1,14 +1,14 @@
 #include "Projectile.h"
 
 namespace {
-constexpr int k_width = 75;
+constexpr int k_width = 1;
 constexpr int k_height = 75;
 // const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 } // namespace
 
 Projectile::Projectile(SDL_Renderer *renderer, bool shouldBeRendered,
                        int startingX, int startingY)
-    : DynamicEntity(renderer, "projectile"),
+    : DynamicEntity(renderer, "projectile", k_width, k_height),
       m_shouldBeRendered(shouldBeRendered) {
   SetPosition(startingX, startingY);
   SetVelocity(0.0, -0.75);

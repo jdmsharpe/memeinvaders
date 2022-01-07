@@ -22,19 +22,28 @@ public:
   void Render(const GameState &gameState);
 
   inline void PlayerMoves(const Uint8 *keyboardState) {
-    m_player->Move(keyboardState);
+    if (m_player) {
+      m_player->Move(keyboardState);
+    }
   }
   inline void EnemyMoves() {
-    m_enemy->Move();
+    if (m_enemy) {
+      m_enemy->Move();
+    }
   }
   inline void PlayerFires() {
-    m_player->Fire();
+    if (m_player) {
+      m_player->Fire();
+    }
   }
   inline void EnemyFires() {
-    m_enemy->Fire();
+    if (m_enemy) {
+      m_enemy->Fire();
+    }
     // std::chrono::milliseconds timespan(1000); // or whatever
     // std::this_thread::sleep_for(timespan);
   }
+  void CollisionDetection();
 
 private:
   SDL_Window *m_window = NULL;
