@@ -25,9 +25,17 @@ std::unique_ptr<Enemy> CreateAndInitializeEnemy(SDL_Renderer *renderer,
 }
 
 const std::vector<std::pair<int, int>> k_enemyMap = {
-    {SCREEN_WIDTH / 2, 0},
+    {SCREEN_WIDTH / 2 + 400, 0},
+    {SCREEN_WIDTH / 2 + 200, 0},
+    {SCREEN_WIDTH / 2 + 0, 0},
     {SCREEN_WIDTH / 2 - 200, 0},
-    {SCREEN_WIDTH / 2 - 400, 0}};
+    {SCREEN_WIDTH / 2 - 400, 0},
+    {SCREEN_WIDTH / 2 + 400, 200},
+    {SCREEN_WIDTH / 2 + 200, 200},
+    {SCREEN_WIDTH / 2, 200},
+    {SCREEN_WIDTH / 2 - 200, 200},
+    {SCREEN_WIDTH / 2 - 400, 200},
+    };
 } // namespace
 
 Window::Window() {}
