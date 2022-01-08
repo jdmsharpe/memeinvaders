@@ -20,7 +20,7 @@ EnemyProjectile::EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered,
 }
 
 bool EnemyProjectile::Initialize() {
-  return LightweightCreateTexture(k_filename);
+  return CreateTexture(k_filename);
 }
 
 void EnemyProjectile::Render() {
