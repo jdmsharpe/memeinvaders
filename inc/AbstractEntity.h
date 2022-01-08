@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "Defs.h"
+#include "Macros.h"
 
 // Abstract class that all objects in game inherit from.
 // Has associated texture to render sprite to screen.

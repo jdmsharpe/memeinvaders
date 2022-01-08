@@ -2,11 +2,8 @@
 #define WINDOW_H
 
 #include "Enemy.h"
-#include "Macros.h"
 #include "MainMenu.h"
 #include "Player.h"
-#include <chrono>
-#include <thread>
 
 // Owns all in-game entities and is in charge of rendering
 // and displaying said entities to screen.
@@ -23,27 +20,18 @@ public:
   void Render(const GameState &gameState);
 
   inline void PlayerMoves(const Uint8 *keyboardState) {
-    if (m_player) {
-      m_player->Move(keyboardState);
-    }
+    EXECUTE_IF_VALID(m_player, m_player->Move(keyboardState));
   }
   inline void EnemyMoves() {
-    if (m_enemy) {
-      m_enemy->Move();
-    }
+    EXECUTE_IF_VALID(m_enemy, m_enemy->Move());
   }
   inline void PlayerFires() {
-    if (m_player) {
-      m_player->Fire();
-    }
+    EXECUTE_IF_VALID(m_player, m_player->Fire());
   }
   inline void EnemyFires() {
-    if (m_enemy) {
-      m_enemy->Fire();
-    }
-    // std::chrono::milliseconds timespan(1000); // or whatever
-    // std::this_thread::sleep_for(timespan);
+    EXECUTE_IF_VALID(m_enemy, m_enemy->Fire());
   }
+
   void CollisionDetection();
 
 private:
