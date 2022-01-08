@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "Enemy.h"
+#include "Macros.h"
 #include "MainMenu.h"
 #include "Player.h"
 #include <chrono>

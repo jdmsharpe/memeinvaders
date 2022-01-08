@@ -11,7 +11,7 @@ std::unique_ptr<T> CreateAndInitialize(SDL_Renderer *renderer) {
   }
   return std::move(toReturn);
 }
-} // namespace test
+} // namespace
 
 Window::Window() {}
 
@@ -65,20 +65,12 @@ void Window::Render(const GameState &gameState) {
 
   switch (gameState) {
   case GameState::MAIN_MENU:
-    m_mainMenu->Render();
+    EXECUTE_IF_VALID(m_mainMenu, m_mainMenu->Render());
     break;
   case GameState::GAME_MODE_1:
-    // Don't render what doesn't exist
-    // Would be cool to have a macro for this
-    if (m_player) {
-      m_player->Render();
-    }
-    if (m_enemy) {
-      m_enemy->Render();
-    }
-    if (m_player && m_enemy) {
-      CollisionDetection();
-    }
+    EXECUTE_IF_VALID(m_player, m_player->Render());
+    EXECUTE_IF_VALID(m_enemy, m_enemy->Render());
+    EXECUTE_IF_BOTH_VALID(m_player, m_enemy, CollisionDetection());
     break;
   case GameState::SETTINGS:
     break;
@@ -107,7 +99,8 @@ void Window::CollisionDetection() {
 
   // Loop through all player-filed projectiles and check for enemy collision
   // TODO: need extra for-loop to account for multiple enemies
-  for (int i = 0; i < (int)m_player->m_projectileArray.size(); i++) {
+  for (size_t i = 0; i < m_player->m_projectileArray.size(); i++) {
+    CONTINUE_IF_NULL(m_player->m_projectileArray[i]);
     BoundingBox *projectileBox =
         m_player->m_projectileArray[i]->GetBoundingBox();
     // Separating axis test
@@ -123,7 +116,8 @@ void Window::CollisionDetection() {
 
   // Loop through all enemy-fired projectiles and check for enemy collision
   // TODO: need extra for-loop to account for multiple enemies
-  for (int j = 0; j < (int)m_enemy->m_projectileArray.size(); j++) {
+  for (size_t j = 0; j < m_enemy->m_projectileArray.size(); j++) {
+    CONTINUE_IF_NULL(m_enemy->m_projectileArray[j]);
     BoundingBox *enemyProjectileBox =
         m_enemy->m_projectileArray[j]->GetBoundingBox();
     // Separating axis test
@@ -138,7 +132,12 @@ void Window::CollisionDetection() {
   }
 
   if (killPlayer) {
-    m_player.reset();
+    // Decrement one life
+    m_player->GiveLives(-1);
+    // Dead after all lives are gone
+    if (m_player->GetLives() <= 0) {
+      m_player.reset();
+    }
   }
 
   if (killEnemy) {

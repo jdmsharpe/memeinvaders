@@ -24,11 +24,22 @@ public:
   // Fire projectile
   void Fire();
 
+  inline int GetLives() {
+    return m_lives;
+  }
+
+  inline void GiveLives(int amount) {
+    m_lives += amount;
+  }
+
   // Stores all projectiles player can fire
   // Use unique_ptr because raw pointers scare me
   std::deque<std::unique_ptr<Projectile>> m_projectileArray;
 
 private:
+  // 3 lives to start
+  int m_lives = 3;
+
   // Keeps track of shots on screen
   int m_shotsPresent = 0;
 
