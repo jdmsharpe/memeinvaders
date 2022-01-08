@@ -47,8 +47,10 @@ int main(int argc, char *argv[]) {
           keyboardState[SDL_SCANCODE_LEFT] || keyboardState[SDL_SCANCODE_RIGHT]) {
         window->PlayerMoves(keyboardState);
       }
-      window->EnemyFires();
-      window->EnemyMoves();
+      for (int i = 0; i < window->m_startingNumEnemies; ++i) {
+        window->EnemyFires(i);
+        window->EnemyMoves(i);
+      }
       // Space to fire
       if (keyboardState[SDL_SCANCODE_SPACE]) {
         window->PlayerFires();

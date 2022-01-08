@@ -11,6 +11,23 @@ std::unique_ptr<T> CreateAndInitialize(SDL_Renderer *renderer) {
   }
   return std::move(toReturn);
 }
+
+std::unique_ptr<Enemy> CreateAndInitializeEnemy(SDL_Renderer *renderer,
+                                                int startingX, int startingY) {
+  std::unique_ptr<Enemy> toReturn =
+      std::make_unique<Enemy>(renderer, startingX, startingY);
+  if (!toReturn->Initialize()) {
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initialize %s!",
+                 toReturn->GetName().c_str());
+    return nullptr;
+  }
+  return std::move(toReturn);
+}
+
+const std::vector<std::pair<int, int>> k_enemyMap = {
+    {SCREEN_WIDTH / 2, 0},
+    {SCREEN_WIDTH / 2 - 200, 0},
+    {SCREEN_WIDTH / 2 - 400, 0}};
 } // namespace
 
 Window::Window() {}
@@ -37,7 +54,11 @@ bool Window::Open() {
 
   m_mainMenu = CreateAndInitialize<MainMenu>(m_renderer);
   m_player = CreateAndInitialize<Player>(m_renderer);
-  m_enemy = CreateAndInitialize<Enemy>(m_renderer);
+
+  for (size_t i = 0; i < m_numEnemies; ++i) {
+    m_enemies.push_back(CreateAndInitializeEnemy(
+        m_renderer, k_enemyMap[i].first, k_enemyMap[i].second));
+  }
 
   return true;
 }
@@ -69,8 +90,10 @@ void Window::Render(const GameState &gameState) {
     break;
   case GameState::GAME_MODE_1:
     EXECUTE_IF_VALID(m_player, m_player->Render());
-    EXECUTE_IF_VALID(m_enemy, m_enemy->Render());
-    EXECUTE_IF_BOTH_VALID(m_player, m_enemy, CollisionDetection());
+    for (int i = 0; i < m_startingNumEnemies; ++i) {
+      EXECUTE_IF_VALID(m_enemies[i], m_enemies[i]->Render());
+      EXECUTE_IF_BOTH_VALID(m_player, m_enemies[i], CollisionDetection(i));
+    }
     break;
   case GameState::SETTINGS:
     break;
@@ -90,12 +113,13 @@ void Window::Render(const GameState &gameState) {
   }
 }
 
-void Window::CollisionDetection() {
+void Window::CollisionDetection(int enemyIdx) {
   // Initialize flags and get bounding box shorthands
   bool killPlayer = false;
   bool killEnemy = false;
+  Enemy* enemy = m_enemies[enemyIdx].get();
   BoundingBox *playerBox = m_player->GetBoundingBox();
-  BoundingBox *enemyBox = m_enemy->GetBoundingBox();
+  BoundingBox *enemyBox = enemy->GetBoundingBox();
 
   // Loop through all player-filed projectiles and check for enemy collision
   // TODO: need extra for-loop to account for multiple enemies
@@ -116,10 +140,10 @@ void Window::CollisionDetection() {
 
   // Loop through all enemy-fired projectiles and check for enemy collision
   // TODO: need extra for-loop to account for multiple enemies
-  for (size_t j = 0; j < m_enemy->m_projectileArray.size(); j++) {
-    CONTINUE_IF_NULL(m_enemy->m_projectileArray[j]);
+  for (size_t j = 0; j < enemy->m_projectileArray.size(); j++) {
+    CONTINUE_IF_NULL(enemy->m_projectileArray[j]);
     BoundingBox *enemyProjectileBox =
-        m_enemy->m_projectileArray[j]->GetBoundingBox();
+        enemy->m_projectileArray[j]->GetBoundingBox();
     // Separating axis test
     if (playerBox->bottom > enemyProjectileBox->top &&
         playerBox->top < enemyProjectileBox->bottom &&
@@ -127,7 +151,7 @@ void Window::CollisionDetection() {
         playerBox->left < enemyProjectileBox->right) {
       killPlayer = true;
       // Delete projectile
-      m_enemy->m_projectileArray[j].reset();
+      enemy->m_projectileArray[j].reset();
     }
   }
 
@@ -141,6 +165,7 @@ void Window::CollisionDetection() {
   }
 
   if (killEnemy) {
-    m_enemy.reset();
+    m_enemies[enemyIdx].reset();
+    m_numEnemies--;
   }
 }

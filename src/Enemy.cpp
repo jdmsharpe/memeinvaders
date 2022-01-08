@@ -11,10 +11,10 @@ constexpr int k_maxProjectiles = 5;
 constexpr int k_shotTimeout = 500; // ms
 } // namespace
 
-Enemy::Enemy(SDL_Renderer *renderer)
+Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY)
     : DynamicEntity(renderer, "enemy", k_width, k_height) {
   // Enemy should spawn in bottom-middle of screen
-  SetPosition(SCREEN_WIDTH / 2, 0);
+  SetPosition(startingX, startingY);
   SetVelocity(0.0, 0.0);
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
