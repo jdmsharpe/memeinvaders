@@ -6,7 +6,7 @@ constexpr int k_height = 150;
 constexpr double k_baseVel = 0.1;
 constexpr double k_baseVely = 5;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
-constexpr int k_projectileHeightLimit = k_height;
+constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
 constexpr int k_maxProjectiles = 5;
 constexpr int k_shotTimeout = 500; // ms
 } // namespace
@@ -57,17 +57,20 @@ void Enemy::Render() {
 
   // Take care of rendering and destroying shots
   for (int i = 0; i < m_shotsPresent; ++i) {
-    // If projectile destroys something its entry will be nulled, so skip
+    // If projectile is null, it's collided with something
     if (!m_projectileArray[i]) {
-      continue;
-    }
-    // If projectile is at bottom of screen, delete it and decrement shots present
-    if (m_projectileArray[i]->GetPosition().second > SCREEN_HEIGHT) {
       m_projectileArray.erase(m_projectileArray.begin() + i);
       m_shotsPresent--;
-    } else {
-      m_projectileArray[i]->Render();
+      continue;
     }
+    // If projectile is at top of screen, delete it and decrement shots present
+    if (m_projectileArray[i]->GetPosition().second > k_projectileHeightLimit) {
+      m_projectileArray.erase(m_projectileArray.begin() + i);
+      m_shotsPresent--;
+      continue;
+    }
+
+    m_projectileArray[i]->Render();
   }
 }
 

@@ -2,7 +2,6 @@
 #define PLAYER_H
 
 #include <chrono>
-#include <deque>
 #include <iostream>
 #include <vector>
 
@@ -34,7 +33,7 @@ public:
 
   // Stores all projectiles player can fire
   // Use unique_ptr because raw pointers scare me
-  std::deque<std::unique_ptr<Projectile>> m_projectileArray;
+  std::vector<std::unique_ptr<Projectile>> m_projectileArray;
 
 private:
   // 3 lives to start
