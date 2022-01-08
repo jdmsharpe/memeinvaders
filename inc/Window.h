@@ -32,8 +32,8 @@ public:
 
   void CollisionDetection(int enemyIdx);
 
-  // Start with 3 for now
-  int m_startingNumEnemies = 10;
+  // Start with 14 for now
+  int m_startingNumEnemies = 14;
 
 private:
   SDL_Window *m_window = NULL;

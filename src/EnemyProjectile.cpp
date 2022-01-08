@@ -13,7 +13,7 @@ EnemyProjectile::EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered,
       m_shouldBeRendered(shouldBeRendered) {
   // Offset position so it looks like it's coming out of the enemy
   SetPosition(startingX, startingY + k_height);
-  SetVelocity(0.0, 0.625);
+  SetVelocity(0.0, 0.5);
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
