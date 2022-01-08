@@ -2,9 +2,9 @@
 
 namespace {
 // Make it a bit smaller than the player's for now
-constexpr int k_width = 1;
-constexpr int k_height = 50;
-// const std::string k_filename = "../memeinvaders/assets/enemy1.png";
+constexpr int k_width = 20;
+constexpr int k_height = 60;
+const std::string k_filename = "../memeinvaders/assets/enemyproj.png";
 } // namespace
 
 EnemyProjectile::EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered,
@@ -13,33 +13,28 @@ EnemyProjectile::EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered,
       m_shouldBeRendered(shouldBeRendered) {
   // Offset position so it looks like it's coming out of the enemy
   SetPosition(startingX, startingY + k_height);
-  SetVelocity(0.0, 0.75);
-  // std::cout << "ENEMY FIRING " <<  std::endl;
-  // m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
-  // m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
+  SetVelocity(0.0, 0.625);
+
+  m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+  m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
 }
 
 bool EnemyProjectile::Initialize() {
-  // SDL_Surface *surface = IMG_Load(k_filename.c_str());
-  // m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-  // SDL_FreeSurface(surface);
-  // if (SDL_GetError != 0) {
-  //   return false;
-  // }
-  // return true;
-
-  // For now do nothing
+  SDL_Surface *surface = IMG_Load(k_filename.c_str());
+  m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+  SDL_FreeSurface(surface);
+  if (SDL_GetError != 0) {
+    return false;
+  }
   return true;
 }
 
 void EnemyProjectile::Render() {
-  // std::cout << "Rendering Shot " <<  std::endl;
   UpdatePositionFromVelocity();
   if (m_shouldBeRendered) {
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-    SDL_RenderDrawLine(m_renderer, m_xPos, m_yPos, m_xPos, m_yPos + k_height);
-    // // Surely there must be an easier way to do this
-    // m_textureBox->x = m_xPos;
-    // m_textureBox->y = m_yPos;
+    SDL_RenderCopy(m_renderer, m_texture, &*m_screenBox, &*m_textureBox);
+    m_textureBox->x = m_xPos;
+    m_textureBox->y = m_yPos;
   }
 }
