@@ -4,7 +4,7 @@ namespace {
 constexpr int k_width = 100;
 constexpr int k_height = 150;
 constexpr double k_baseVel = 0.1;
-constexpr double k_baseVely = 7.5;
+constexpr double k_baseVely = 6;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
 constexpr int k_maxProjectiles = 2;
