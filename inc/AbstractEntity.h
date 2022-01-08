@@ -37,6 +37,48 @@ public:
   // Render entity
   virtual void Render() = 0;
 
+  bool ImgInit() {
+    // Something really went wrong
+    if (m_renderer == NULL) {
+      SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+                  "MainMenu pointer to renderer was NULL!");
+      return false;
+    }
+
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+      SDL_LogError(SDL_LOG_CATEGORY_ERROR, "SDL_Image could not initialize!");
+      return false;
+    }
+
+    return true;
+  }
+
+  bool CreateTexture(const std::string& filename) {
+    // Load image and create texture
+    SDL_Surface *surface = IMG_Load(filename.c_str());
+    if (surface == NULL) {
+      SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+                  "Unable to load image %s! Error code: %s.", filename.c_str(),
+                  SDL_GetError());
+      return false;
+    }
+
+    m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+    SDL_FreeSurface(surface);
+    return true;
+  }
+
+  bool LightweightCreateTexture(const std::string& filename) {
+    // Load surface and create texture
+    SDL_Surface *surface = IMG_Load(filename.c_str());
+    m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+    SDL_FreeSurface(surface);
+    if (SDL_GetError != 0) {
+      return false;
+    }
+    return true;
+  }
+
 protected:
   SDL_Renderer *m_renderer = NULL;
   SDL_Texture *m_texture = NULL;

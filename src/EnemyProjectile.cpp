@@ -20,13 +20,7 @@ EnemyProjectile::EnemyProjectile(SDL_Renderer *renderer, bool shouldBeRendered,
 }
 
 bool EnemyProjectile::Initialize() {
-  SDL_Surface *surface = IMG_Load(k_filename.c_str());
-  m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-  SDL_FreeSurface(surface);
-  if (SDL_GetError != 0) {
-    return false;
-  }
-  return true;
+  return LightweightCreateTexture(k_filename);
 }
 
 void EnemyProjectile::Render() {
