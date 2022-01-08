@@ -9,3 +9,11 @@ To build:
 4. `cd memeinvaders_build && cmake ../memeinvaders`
 5. `cmake --build .`
 6. Finally, run the executable with: `./MemeInvaders`
+
+To debug (VSCode only):
+
+1. Ensure build is built with debug flags in CMake file
+2. Build as usual (steps above)
+3. Edit `launch_template.json` under `.vscode` as directed in the file
+4. Rename `launch_template.json` to `launch.json`
+5. Use VSCode's Run and Debug option in the left pane to debug the application
