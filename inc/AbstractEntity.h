@@ -68,17 +68,6 @@ public:
     return true;
   }
 
-  bool LightweightCreateTexture(const std::string& filename) {
-    // Load surface and create texture
-    SDL_Surface *surface = IMG_Load(filename.c_str());
-    m_texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-    SDL_FreeSurface(surface);
-    if (SDL_GetError != 0) {
-      return false;
-    }
-    return true;
-  }
-
 protected:
   SDL_Renderer *m_renderer = NULL;
   SDL_Texture *m_texture = NULL;
