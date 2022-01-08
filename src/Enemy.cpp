@@ -4,11 +4,11 @@ namespace {
 constexpr int k_width = 100;
 constexpr int k_height = 150;
 constexpr double k_baseVel = 0.1;
-constexpr double k_baseVely = 5;
+constexpr double k_baseVely = 7.5;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
-constexpr int k_maxProjectiles = 5;
-constexpr int k_shotTimeout = 500; // ms
+constexpr int k_maxProjectiles = 2;
+constexpr int k_shotTimeout = 1000; // ms
 } // namespace
 
 Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY)
