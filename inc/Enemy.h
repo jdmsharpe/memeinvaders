@@ -12,7 +12,7 @@
 // Entity that serves as enemy to player.
 class Enemy : public DynamicEntity {
 public:
-  Enemy(SDL_Renderer *renderer);
+  Enemy(SDL_Renderer *renderer, int startingX, int startingY);
   ~Enemy();
 
   // Grab image and create texture
