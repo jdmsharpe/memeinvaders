@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "MainMenu.h"
 #include "Player.h"
+#include "Score.h"
 
 // Owns all in-game entities and is in charge of rendering
 // and displaying said entities to screen.
@@ -47,6 +48,7 @@ private:
   std::unique_ptr<MainMenu> m_mainMenu = nullptr;
   std::unique_ptr<Player> m_player = nullptr;
   std::vector<std::unique_ptr<Enemy>> m_enemies;
+  std::unique_ptr<Score> m_score = nullptr;
 
   int m_numEnemies = m_startingNumEnemies;
 };

@@ -1,5 +1,7 @@
 # memeinvaders
 Space invaders clone in C++
+Fonts used:
+-Silkscreen by Jason Kottke
 
 To build:
 
