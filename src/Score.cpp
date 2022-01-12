@@ -53,7 +53,7 @@ void Score::Render() {
 
 bool Score::Give1Up() {
   // For some reason (0 % 5000 == 1) I guess
-  if (m_rawScore == 0) {
+  if (m_rawScore <= 0) {
     return false;
   }
 
