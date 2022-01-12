@@ -8,7 +8,7 @@ constexpr double k_baseVely = 6;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
 constexpr int k_maxProjectiles = 2;
-constexpr int k_shotTimeout = 1000; // ms
+constexpr int k_shotTimeout = 500; // ms
 } // namespace
 
 Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY)
@@ -101,10 +101,10 @@ void Enemy::Fire() {
     // Check last time we fired to slow things down a bit
     auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         Clock::now() - m_lastFire);
-    if (timeElapsed.count() >= k_shotTimeout) {
+    // Don't always fire
+    int randNum = rand();
+    if (timeElapsed.count() >= k_shotTimeout && randNum % 100 == 0) {
       m_lastFire = Clock::now();
-      // I should do the math on this at some point so that the projectile
-      // looks like it's coming out of the ship or even the missile bays
       std::unique_ptr<EnemyProjectile> newProj =
           std::make_unique<EnemyProjectile>(
               m_renderer, true, m_xPos + k_width / 2, m_yPos + k_height / 10);
