@@ -20,7 +20,7 @@ MainMenu::MainMenu(SDL_Renderer *renderer)
 MainMenu::~MainMenu() {}
 
 bool MainMenu::Initialize() {
-  return (ImgInit() && CreateTexture(k_filename));
+  return CreateTexture(k_filename);
 }
 
 void MainMenu::Render() {

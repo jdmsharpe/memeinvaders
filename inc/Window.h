@@ -14,6 +14,10 @@ public:
 
   // Create window, surface, and renderer
   bool Open();
+  // Create all game entities
+  void CreateEntities();
+  // If player presses reset...
+  void ResetGameMode1();
   // Destroy window, surface, and renderer
   void Close();
   // Update entity positions and process commands

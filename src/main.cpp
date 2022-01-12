@@ -54,7 +54,10 @@ int main(int argc, char *argv[]) {
       // Space to fire
       if (keyboardState[SDL_SCANCODE_SPACE]) {
         window->PlayerFires();
-        //window->EnemyFires();
+      }
+      // R to reset game
+      if (keyboardState[SDL_SCANCODE_R]) {
+        window->ResetGameMode1();
       }
       break;
     }

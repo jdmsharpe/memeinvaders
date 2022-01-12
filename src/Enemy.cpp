@@ -24,7 +24,7 @@ Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY)
 Enemy::~Enemy() {}
 
 bool Enemy::Initialize() {
-  return (ImgInit() && CreateTexture(k_filename));
+  return CreateTexture(k_filename);
 }
 
 void Enemy::Render() {

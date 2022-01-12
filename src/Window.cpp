@@ -58,21 +58,53 @@ bool Window::Open() {
       SDL_LogError(SDL_LOG_CATEGORY_ERROR,
                    "Window could not be created. Error code: %s.",
                    SDL_GetError());
+      return false;
     } else {
       m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_SOFTWARE);
       m_screenSurface = SDL_GetWindowSurface(m_window);
     }
   }
 
+  // Something really went wrong
+  if (m_renderer == NULL) {
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR,
+                "MainMenu pointer to renderer was NULL!");
+    return false;
+  }
+
+  if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR, "SDL_Image could not initialize!");
+    return false;
+  }
+
+  CreateEntities();
+
+  return true;
+}
+
+void Window::CreateEntities() {
   m_mainMenu = CreateAndInitialize<MainMenu>(m_renderer);
   m_player = CreateAndInitialize<Player>(m_renderer);
+
+  for (size_t i = 0; i < m_startingNumEnemies; ++i) {
+    m_enemies.push_back(CreateAndInitializeEnemy(
+        m_renderer, k_enemyMap[i].first, k_enemyMap[i].second));
+  }
+}
+
+void Window::ResetGameMode1() {
+  // Reset player and lives
+  m_player.reset();
+  m_player = CreateAndInitialize<Player>(m_renderer);
+
+  // Clear and repopulate vector of enemies
+  m_numEnemies = m_startingNumEnemies;
+  m_enemies.clear();
 
   for (size_t i = 0; i < m_numEnemies; ++i) {
     m_enemies.push_back(CreateAndInitializeEnemy(
         m_renderer, k_enemyMap[i].first, k_enemyMap[i].second));
   }
-
-  return true;
 }
 
 void Window::Close() {
@@ -169,7 +201,8 @@ void Window::CollisionDetection(int enemyIdx) {
 
   if (killPlayer) {
     // Decrement one life
-    m_player->GiveLives(-1);
+    m_player->SetLives(m_player->GetLives() - 1);
+    m_player->UpdateLivesDisplay();
     // Dead after all lives are gone
     if (m_player->GetLives() <= 0) {
       m_player.reset();
@@ -179,5 +212,7 @@ void Window::CollisionDetection(int enemyIdx) {
   if (killEnemy) {
     m_enemies[enemyIdx].reset();
     m_numEnemies--;
+    m_player->SetLives(m_player->GetLives() + 1);
+    m_player->UpdateLivesDisplay();
   }
 }
