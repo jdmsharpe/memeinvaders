@@ -24,7 +24,6 @@ public:
   // Fire projectile
   void Fire();
 
-  // Functions to get/set lives
   inline int GetLives() { return m_lives; }
   inline void SetLives(int amount) { m_lives = amount; }
 

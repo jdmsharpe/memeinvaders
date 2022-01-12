@@ -8,7 +8,8 @@ constexpr double k_baseVely = 6;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
 constexpr int k_maxProjectiles = 2;
-constexpr int k_shotTimeout = 500; // ms
+constexpr int k_shotTimeout = 1000; // ms
+constexpr int k_randNumMod = 200;
 } // namespace
 
 Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY)
@@ -23,9 +24,7 @@ Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY)
 
 Enemy::~Enemy() {}
 
-bool Enemy::Initialize() {
-  return CreateTexture(k_filename);
-}
+bool Enemy::Initialize() { return CreateTexture(k_filename); }
 
 void Enemy::Render() {
   SDL_RenderCopy(m_renderer, m_texture, &*m_screenBox, &*m_textureBox);
@@ -103,7 +102,7 @@ void Enemy::Fire() {
         Clock::now() - m_lastFire);
     // Don't always fire
     int randNum = rand();
-    if (timeElapsed.count() >= k_shotTimeout && randNum % 100 == 0) {
+    if (timeElapsed.count() >= k_shotTimeout && randNum % k_randNumMod == 0) {
       m_lastFire = Clock::now();
       std::unique_ptr<EnemyProjectile> newProj =
           std::make_unique<EnemyProjectile>(

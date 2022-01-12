@@ -77,6 +77,11 @@ bool Window::Open() {
     return false;
   }
 
+  if (TTF_Init() == -1) {
+    SDL_LogError(SDL_LOG_CATEGORY_ERROR, "SDL_TTF could not initialize!");
+    return false;
+  }
+
   CreateEntities();
 
   return true;
@@ -90,6 +95,8 @@ void Window::CreateEntities() {
     m_enemies.push_back(CreateAndInitializeEnemy(
         m_renderer, k_enemyMap[i].first, k_enemyMap[i].second));
   }
+
+  m_score = CreateAndInitialize<Score>(m_renderer);
 }
 
 void Window::ResetGameMode1() {
@@ -105,6 +112,8 @@ void Window::ResetGameMode1() {
     m_enemies.push_back(CreateAndInitializeEnemy(
         m_renderer, k_enemyMap[i].first, k_enemyMap[i].second));
   }
+
+  m_score->ResetScore();
 }
 
 void Window::Close() {
@@ -138,6 +147,7 @@ void Window::Render(const GameState &gameState) {
       EXECUTE_IF_VALID(m_enemies[i], m_enemies[i]->Render());
       EXECUTE_IF_BOTH_VALID(m_player, m_enemies[i], CollisionDetection(i));
     }
+    EXECUTE_IF_VALID(m_score, m_score->Render());
     break;
   case GameState::SETTINGS:
     break;
@@ -202,17 +212,21 @@ void Window::CollisionDetection(int enemyIdx) {
   if (killPlayer) {
     // Decrement one life
     m_player->SetLives(m_player->GetLives() - 1);
-    m_player->UpdateLivesDisplay();
     // Dead after all lives are gone
     if (m_player->GetLives() <= 0) {
       m_player.reset();
     }
+    m_score->UpdateScore(-5000);
   }
 
   if (killEnemy) {
     m_enemies[enemyIdx].reset();
     m_numEnemies--;
-    m_player->SetLives(m_player->GetLives() + 1);
-    m_player->UpdateLivesDisplay();
+    m_score->UpdateScore(1000);
   }
+
+  if (m_score->Give1Up()) {
+    m_player->SetLives(m_player->GetLives() + 1);
+  }
+  m_player->UpdateLivesDisplay();
 }
