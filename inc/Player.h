@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "DynamicEntity.h"
+#include "Lives.h"
 #include "Projectile.h"
 
 // Entity controlled by player during gameplay.
@@ -23,17 +24,17 @@ public:
   // Fire projectile
   void Fire();
 
-  inline int GetLives() {
-    return m_lives;
-  }
+  // Functions to get/set lives
+  inline int GetLives() { return m_lives; }
+  inline void SetLives(int amount) { m_lives = amount; }
 
-  inline void GiveLives(int amount) {
-    m_lives += amount;
-  }
+  // Update lives display based on current lives
+  void UpdateLivesDisplay();
 
   // Stores all projectiles player can fire
-  // Use unique_ptr because raw pointers scare me
   std::vector<std::unique_ptr<Projectile>> m_projectileArray;
+  // Store entity for rendering current lives on screen
+  std::vector<std::unique_ptr<Lives>> m_livesArray;
 
 private:
   // 3 lives to start

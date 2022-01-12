@@ -8,6 +8,8 @@ const std::string k_filename = "../memeinvaders/assets/player1.png";
 constexpr int k_projectileHeightLimit = -k_height;
 constexpr int k_maxProjectiles = 5;
 constexpr int k_shotTimeout = 250; // ms
+constexpr int k_livesXOffset = 15;
+constexpr int k_livesSpacing = 40;
 } // namespace
 
 Player::Player(SDL_Renderer *renderer)
@@ -18,12 +20,20 @@ Player::Player(SDL_Renderer *renderer)
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
+
+  // Create life display entities
+  for (int i = 0; i < m_lives; ++i) {
+    std::unique_ptr<Lives> newLife = std::make_unique<Lives>(
+        m_renderer, k_livesXOffset + k_livesSpacing * i, 0);
+    newLife->Initialize();
+    m_livesArray.push_back(std::move(newLife));
+  }
 }
 
 Player::~Player() {}
 
 bool Player::Initialize() {
-  return (ImgInit() && CreateTexture(k_filename));
+  return CreateTexture(k_filename);
 }
 
 void Player::Render() {
@@ -48,6 +58,11 @@ void Player::Render() {
     }
 
     m_projectileArray[i]->Render();
+  }
+
+  for (size_t i = 0; i < m_livesArray.size(); ++i) {
+    CONTINUE_IF_NULL(m_livesArray[i]);
+    m_livesArray[i]->Render();
   }
 }
 
@@ -92,5 +107,18 @@ void Player::Fire() {
       // Store total number on screen
       m_shotsPresent = static_cast<int>(m_projectileArray.size());
     }
+  }
+}
+
+void Player::UpdateLivesDisplay() {
+  // If player lost a life, remove last member of vector
+  if (GetLives() < (int)m_livesArray.size()) {
+    m_livesArray.erase(m_livesArray.end() - 1);
+  // If player gained a life, create a new member
+  } else if (GetLives() > (int)m_livesArray.size()) {
+    std::unique_ptr<Lives> newLife = std::make_unique<Lives>(
+        m_renderer, k_livesXOffset + (GetLives() - 1) * k_livesSpacing, 0);
+    newLife->Initialize();
+    m_livesArray.push_back(std::move(newLife));
   }
 }

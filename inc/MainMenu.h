@@ -15,9 +15,6 @@ public:
   bool Initialize() override;
   // Render entity
   void Render() override;
-
-private:
-
 };
 
 #endif // MAINMENU_H

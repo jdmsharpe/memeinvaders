@@ -5,6 +5,7 @@ project(memeinvaders VERSION 0.01)
 # C++20 because new tech!!!
 set(CMAKE_CXX_STANDARD 20)
 # Set to optimized debug, comment out to disable
+# Unsure if there's a performance impact...
 set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 include(FindPkgConfig)
