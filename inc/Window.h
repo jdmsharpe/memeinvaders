@@ -24,6 +24,7 @@ public:
   // Update entity positions and process commands
   void Render(const GameState &gameState);
 
+  // Functions to update player and enemies from inputs
   inline void PlayerMoves(const Uint8 *keyboardState) {
     EXECUTE_IF_VALID(m_player, m_player->Move(keyboardState));
   }
@@ -35,7 +36,12 @@ public:
     EXECUTE_IF_VALID(m_enemies[enemyIdx], m_enemies[enemyIdx]->Fire());
   }
 
-  void CollisionDetection(int enemyIdx);
+  // Check if projectiles have hit target
+  void CollisionDetection(int enemyIdx, std::pair<bool, bool> &collisionResult);
+
+  // Process results of collision detection
+  void ProcessEvents(int enemyIdx,
+                     const std::pair<bool, bool> &collisionResult);
 
   // Start with 14 for now
   int m_startingNumEnemies = 14;

@@ -25,21 +25,14 @@ std::unique_ptr<Enemy> CreateAndInitializeEnemy(SDL_Renderer *renderer,
 }
 
 const std::vector<std::pair<int, int>> k_enemyMap = {
-    {SCREEN_WIDTH / 2 + 600, 0},
-    {SCREEN_WIDTH / 2 + 400, 0},
-    {SCREEN_WIDTH / 2 + 200, 0},
-    {SCREEN_WIDTH / 2 + 0, 0},
-    {SCREEN_WIDTH / 2 - 200, 0},
-    {SCREEN_WIDTH / 2 - 400, 0},
-    {SCREEN_WIDTH / 2 - 600, 0},
-    {SCREEN_WIDTH / 2 + 600, 200},
-    {SCREEN_WIDTH / 2 + 400, 200},
-    {SCREEN_WIDTH / 2 + 200, 200},
-    {SCREEN_WIDTH / 2, 200},
-    {SCREEN_WIDTH / 2 - 200, 200},
-    {SCREEN_WIDTH / 2 - 400, 200},
-    {SCREEN_WIDTH / 2 - 600, 200},
-    };
+    {SCREEN_WIDTH / 2 + 600, 0},   {SCREEN_WIDTH / 2 + 400, 0},
+    {SCREEN_WIDTH / 2 + 200, 0},   {SCREEN_WIDTH / 2 + 0, 0},
+    {SCREEN_WIDTH / 2 - 200, 0},   {SCREEN_WIDTH / 2 - 400, 0},
+    {SCREEN_WIDTH / 2 - 600, 0},   {SCREEN_WIDTH / 2 + 600, 200},
+    {SCREEN_WIDTH / 2 + 400, 200}, {SCREEN_WIDTH / 2 + 200, 200},
+    {SCREEN_WIDTH / 2, 200},       {SCREEN_WIDTH / 2 - 200, 200},
+    {SCREEN_WIDTH / 2 - 400, 200}, {SCREEN_WIDTH / 2 - 600, 200},
+};
 } // namespace
 
 Window::Window() {}
@@ -68,7 +61,7 @@ bool Window::Open() {
   // Something really went wrong
   if (m_renderer == NULL) {
     SDL_LogError(SDL_LOG_CATEGORY_ERROR,
-                "MainMenu pointer to renderer was NULL!");
+                 "MainMenu pointer to renderer was NULL!");
     return false;
   }
 
@@ -145,7 +138,11 @@ void Window::Render(const GameState &gameState) {
     EXECUTE_IF_VALID(m_player, m_player->Render());
     for (int i = 0; i < m_startingNumEnemies; ++i) {
       EXECUTE_IF_VALID(m_enemies[i], m_enemies[i]->Render());
-      EXECUTE_IF_BOTH_VALID(m_player, m_enemies[i], CollisionDetection(i));
+      // First flag is for enemy, second is for player
+      std::pair<bool, bool> collisionResult;
+      EXECUTE_IF_BOTH_VALID(m_player, m_enemies[i],
+                            CollisionDetection(i, collisionResult));
+      EXECUTE_IF_VALID(m_score, ProcessEvents(i, collisionResult));
     }
     EXECUTE_IF_VALID(m_score, m_score->Render());
     break;
@@ -167,11 +164,10 @@ void Window::Render(const GameState &gameState) {
   }
 }
 
-void Window::CollisionDetection(int enemyIdx) {
-  // Initialize flags and get bounding box shorthands
-  bool killPlayer = false;
-  bool killEnemy = false;
-  Enemy* enemy = m_enemies[enemyIdx].get();
+void Window::CollisionDetection(int enemyIdx,
+                                std::pair<bool, bool> &collisionResult) {
+  // Get shorthands
+  Enemy *enemy = m_enemies[enemyIdx].get();
   BoundingBox *playerBox = m_player->GetBoundingBox();
   BoundingBox *enemyBox = enemy->GetBoundingBox();
 
@@ -186,7 +182,7 @@ void Window::CollisionDetection(int enemyIdx) {
         enemyBox->top < projectileBox->bottom &&
         enemyBox->right > projectileBox->left &&
         enemyBox->left < projectileBox->right) {
-      killEnemy = true;
+      collisionResult.first = true;
       // Delete projectile
       m_player->m_projectileArray[i].reset();
     }
@@ -203,16 +199,26 @@ void Window::CollisionDetection(int enemyIdx) {
         playerBox->top < enemyProjectileBox->bottom &&
         playerBox->right > enemyProjectileBox->left &&
         playerBox->left < enemyProjectileBox->right) {
-      killPlayer = true;
+      collisionResult.second = true;
       // Delete projectile
       enemy->m_projectileArray[j].reset();
     }
   }
+}
 
-  if (killPlayer) {
+void Window::ProcessEvents(int enemyIdx,
+                           const std::pair<bool, bool> &collisionResult) {
+  // Kill enemy
+  if (collisionResult.first) {
+    m_enemies[enemyIdx].reset();
+    m_numEnemies--;
+    m_score->UpdateScore(1000);
+  }
+
+  // Kill player
+  if (collisionResult.second) {
     // Decrement one life
     m_player->SetLives(m_player->GetLives() - 1);
-    m_player->UpdateLivesDisplay();
     // Dead after all lives are gone
     if (m_player->GetLives() <= 0) {
       m_player.reset();
@@ -220,14 +226,10 @@ void Window::CollisionDetection(int enemyIdx) {
     m_score->UpdateScore(-5000);
   }
 
-  if (killEnemy) {
-    m_enemies[enemyIdx].reset();
-    m_numEnemies--;
-    m_score->UpdateScore(1000);
-  }
-
+  // Check if score is at checkpoint
   if (m_score->Give1Up()) {
     m_player->SetLives(m_player->GetLives() + 1);
-    m_player->UpdateLivesDisplay();
   }
+
+  m_player->UpdateLivesDisplay();
 }
