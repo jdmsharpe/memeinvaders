@@ -57,7 +57,8 @@ int main(int argc, char *argv[]) {
       }
       // R to reset game
       if (keyboardState[SDL_SCANCODE_R]) {
-        window->ResetGameMode1();
+        //window->ResetGameMode1();
+        gameState = GameState::MAIN_MENU;
       }
       break;
     }
