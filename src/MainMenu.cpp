@@ -2,6 +2,7 @@
 
 namespace {
 const std::string k_filename = "../memeinvaders/assets/logo.png";
+
 constexpr int k_width = 200;
 constexpr int k_height = 200;
 constexpr int k_widthOffset = 100;
