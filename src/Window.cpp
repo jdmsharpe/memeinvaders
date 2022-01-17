@@ -221,6 +221,7 @@ void Window::ProcessEvents(int enemyIdx,
   if (collisionResult.second) {
     // Decrement one life
     m_player->SetLives(m_player->GetLives() - 1);
+    m_player->UpdateLivesDisplay();
     // Dead after all lives are gone
     if (m_player->GetLives() <= 0) {
       m_player.reset();
@@ -231,7 +232,6 @@ void Window::ProcessEvents(int enemyIdx,
   // Check if score is at checkpoint
   if (m_score->Give1Up()) {
     m_player->SetLives(m_player->GetLives() + 1);
+    m_player->UpdateLivesDisplay();
   }
-
-  m_player->UpdateLivesDisplay();
 }
