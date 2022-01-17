@@ -18,15 +18,36 @@ int main(int argc, char *argv[]) {
 
   while (!quit) {
     // Handle queue
-    while (SDL_PollEvent(&e) != 0) {
+    while (SDL_PollEvent(&e)) {
       // User closes window
-      if (e.type == SDL_QUIT) {
-        quit = true;
+      switch(e.type) {
+        case SDL_QUIT:
+          quit = true;
+          break;
+        case SDL_MOUSEBUTTONDOWN:
+          const SDL_MouseButtonEvent &mouse_event = e.button;
+          int x,y;
+
+          if (mouse_event.button == SDL_BUTTON_LEFT && gameState == GameState::MAIN_MENU) {
+            SDL_GetMouseState(&x, &y);
+
+            //std::cout << "XTEST" << x << std::endl;
+            //std::cout << "YTEST" << y << std::endl;
+            if (x >= 560 && x <= 810){
+              if (y >= 610 && y <= 655) {
+                //std::cout << "START" << std::endl;
+                gameState = GameState::GAME_MODE_1;
+              }
+            }
+          }
+
       }
     }
 
     // Get all keys currently pressed
     const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
+    // Get mouseclick events
+    //const Uint8 *mouseEvent = SDL_MouseButtonEvent(NULL);
 
     // Pseudo-state machine to handle switching between game states
     // Should probably be cleaned up at some point (or just not be in main)
