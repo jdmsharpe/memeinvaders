@@ -5,8 +5,8 @@ namespace {
 constexpr int k_width = 250;
 constexpr int k_height = 45;
 constexpr int k_widthOffset = 20;
-constexpr size_t k_rawScoreDefaultLength = 8;
 constexpr int k_characterSize = 50;
+const std::string k_fontPath = "../memeinvaders/assets/slkscre.ttf";
 } // namespace
 
 Score::Score(SDL_Renderer *renderer) : AbstractEntity(renderer, "score") {
@@ -23,7 +23,7 @@ Score::~Score() {
 }
 
 bool Score::Initialize() {
-  m_silkscreen = TTF_OpenFont("../memeinvaders/assets/slkscre.ttf", k_characterSize);
+  m_silkscreen = TTF_OpenFont(k_fontPath.c_str(), k_characterSize);
   return true;
 }
 
@@ -32,8 +32,6 @@ void Score::Render() {
   // Doing this every rendering loop is most likely bad for efficiency
   // TODO: Refactor later
   std::string rawScoreText = std::to_string(m_rawScore);
-  int offset =
-      (rawScoreText.length() - k_rawScoreDefaultLength) * k_characterSize;
 
   SDL_Surface *textSurface =
       TTF_RenderText_Solid(m_silkscreen, rawScoreText.c_str(), {255, 255, 255});

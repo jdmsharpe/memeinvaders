@@ -15,7 +15,8 @@ constexpr int DELTA_TIME = 16; // ms
 enum GameState {
     MAIN_MENU = 0,
     GAME_MODE_1 = 1,
-    SETTINGS = 2
+    SETTINGS = 2,
+    HIGH_SCORE = 3
 };
 
 // Bounding box definition

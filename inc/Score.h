@@ -30,9 +30,9 @@ public:
   bool Give1Up();
 
 private:
-  TTF_Font *m_silkscreen;
+  TTF_Font *m_silkscreen = NULL;
 
-  SDL_Rect *m_textBox;
+  SDL_Rect *m_textBox = NULL;
 
   long m_rawScore = 0;
   bool m_1AndDone = false;

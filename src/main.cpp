@@ -52,14 +52,19 @@ int main(int argc, char *argv[]) {
     // Pseudo-state machine to handle switching between game states
     // Should probably be cleaned up at some point (or just not be in main)
     switch (gameState) {
+    // Cascade states with common behavior for now
+    case GameState::SETTINGS:
     case GameState::MAIN_MENU:
-      // Enter to exit for now
+    case GameState::HIGH_SCORE:
       if (keyboardState[SDL_SCANCODE_RETURN]) {
         gameState = GameState::GAME_MODE_1;
       }
-      break;
-
-    case GameState::SETTINGS:
+      if (keyboardState[SDL_SCANCODE_H]) {
+        gameState = GameState::HIGH_SCORE;
+      }
+      if (keyboardState[SDL_SCANCODE_R]) {
+        gameState = GameState::MAIN_MENU;
+      }
       break;
 
     case GameState::GAME_MODE_1:
@@ -78,7 +83,7 @@ int main(int argc, char *argv[]) {
       }
       // R to reset game
       if (keyboardState[SDL_SCANCODE_R]) {
-        //window->ResetGameMode1();
+        window->ResetGameMode1();
         gameState = GameState::MAIN_MENU;
       }
       break;
