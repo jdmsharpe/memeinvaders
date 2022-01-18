@@ -6,7 +6,7 @@ project(memeinvaders VERSION 0.01)
 set(CMAKE_CXX_STANDARD 20)
 # Set to optimized debug, comment out to disable
 # Unsure if there's a performance impact...
-# set(CMAKE_BUILD_TYPE RelWithDebInfo)
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 include(FindPkgConfig)
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)

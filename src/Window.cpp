@@ -83,6 +83,7 @@ bool Window::Open() {
 void Window::CreateEntities() {
   m_mainMenu = CreateAndInitialize<MainMenu>(m_renderer);
   m_mainMenuOptions = CreateAndInitialize<MainMenuOptions>(m_renderer);
+  m_highScore = CreateAndInitialize<HighScore>(m_renderer);
   m_player = CreateAndInitialize<Player>(m_renderer);
 
   for (size_t i = 0; i < m_startingNumEnemies; ++i) {
@@ -135,6 +136,9 @@ void Window::Render(const GameState &gameState) {
   case GameState::MAIN_MENU:
     EXECUTE_IF_VALID(m_mainMenu, m_mainMenu->Render());
     EXECUTE_IF_VALID(m_mainMenuOptions, m_mainMenuOptions->Render());
+    break;
+  case GameState::HIGH_SCORE:
+    EXECUTE_IF_VALID(m_highScore, m_highScore->Render());
     break;
   case GameState::GAME_MODE_1:
     EXECUTE_IF_VALID(m_player, m_player->Render());

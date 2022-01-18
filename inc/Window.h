@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "Enemy.h"
+#include "HighScore.h"
 #include "MainMenu.h"
 #include "MainMenuOptions.h"
 #include "Player.h"
@@ -57,6 +58,7 @@ private:
   std::unique_ptr<Player> m_player = nullptr;
   std::vector<std::unique_ptr<Enemy>> m_enemies;
   std::unique_ptr<Score> m_score = nullptr;
+  std::unique_ptr<HighScore> m_highScore = nullptr;
 
   int m_numEnemies = m_startingNumEnemies;
 };
