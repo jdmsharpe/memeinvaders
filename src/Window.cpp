@@ -232,6 +232,7 @@ void Window::ProcessEvents(int enemyIdx,
     // Dead after all lives are gone
     if (m_player->GetLives() <= 0) {
       m_player.reset();
+      m_gameOver = true;
     }
     m_score->UpdateScore(-5000);
     m_validCheckpoint = false;
@@ -245,9 +246,13 @@ void Window::ProcessEvents(int enemyIdx,
 
   // Game over, player has died
   // Enter high score if applicable
-  if (!m_player) {
+  // For now, game just freezes here unless you reset
+  // Need game over screen
+  if (m_gameOver) {
     std::string name;
+    std::cout << "Please enter your name: ";
     std::cin >> name;
     m_highScore->AddEntry(std::make_pair(m_score->GetScore(), name));
+    m_gameOver = false;
   }
 }
