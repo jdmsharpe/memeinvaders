@@ -64,6 +64,8 @@ private:
 
   // Help make sure there is no weird 1-up behavior
   bool m_validCheckpoint = false;
+  // Track if game has ended
+  bool m_gameOver = false;
 };
 
 #endif // WINDOW_H
