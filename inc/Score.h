@@ -27,7 +27,7 @@ public:
   }
 
   // Determines if player has hit checkpoint score for 1-Up
-  bool Give1Up();
+  bool Give1Up(int checkpoint);
 
 private:
   TTF_Font *m_silkscreen = NULL;

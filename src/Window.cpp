@@ -33,6 +33,8 @@ const std::vector<std::pair<int, int>> k_enemyMap = {
     {SCREEN_WIDTH / 2, 200},       {SCREEN_WIDTH / 2 - 200, 200},
     {SCREEN_WIDTH / 2 - 400, 200}, {SCREEN_WIDTH / 2 - 600, 200},
 };
+
+constexpr int k_checkpointScore = 5000;
 } // namespace
 
 Window::Window() {}
@@ -219,6 +221,7 @@ void Window::ProcessEvents(int enemyIdx,
     m_enemies[enemyIdx].reset();
     m_numEnemies--;
     m_score->UpdateScore(1000);
+    m_validCheckpoint = true;
   }
 
   // Kill player
@@ -229,16 +232,22 @@ void Window::ProcessEvents(int enemyIdx,
     // Dead after all lives are gone
     if (m_player->GetLives() <= 0) {
       m_player.reset();
-      std::string name;
-      std::cin >> name;
-      m_highScore->AddEntry(std::make_pair(m_score->GetScore(), name));
     }
     m_score->UpdateScore(-5000);
+    m_validCheckpoint = false;
   }
 
   // Check if score is at checkpoint
-  if (m_score->Give1Up()) {
+  if (m_score->Give1Up(k_checkpointScore) && m_validCheckpoint) {
     m_player->SetLives(m_player->GetLives() + 1);
     m_player->UpdateLivesDisplay();
+  }
+
+  // Game over, player has died
+  // Enter high score if applicable
+  if (!m_player) {
+    std::string name;
+    std::cin >> name;
+    m_highScore->AddEntry(std::make_pair(m_score->GetScore(), name));
   }
 }
