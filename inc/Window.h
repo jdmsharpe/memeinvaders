@@ -61,6 +61,9 @@ private:
   std::unique_ptr<HighScore> m_highScore = nullptr;
 
   int m_numEnemies = m_startingNumEnemies;
+
+  // Help make sure there is no weird 1-up behavior
+  bool m_validCheckpoint = false;
 };
 
 #endif // WINDOW_H

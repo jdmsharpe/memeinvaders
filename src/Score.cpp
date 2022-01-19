@@ -49,14 +49,14 @@ void Score::Render() {
   SDL_DestroyTexture(textTexture);
 }
 
-bool Score::Give1Up() {
-  // For some reason (0 % 5000 == 1) I guess
+bool Score::Give1Up(int checkpoint) {
+  // For some reason (0 % x == 1) I guess
   if (m_rawScore <= 0) {
     return false;
   }
 
   // It's time!
-  if (m_rawScore % 5000 == 0 && !m_1AndDone) {
+  if (m_rawScore % checkpoint == 0 && !m_1AndDone) {
     m_1AndDone = true;
     return true;
   }
