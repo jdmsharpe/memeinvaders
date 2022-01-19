@@ -20,33 +20,34 @@ Score::~Score() {
   TTF_CloseFont(m_silkscreen);
   delete m_textBox;
   m_textBox = nullptr;
+
+  SDL_FreeSurface(m_textSurface);
+  SDL_DestroyTexture(m_textTexture);
 }
 
 bool Score::Initialize() {
   m_silkscreen = TTF_OpenFont(k_fontPath.c_str(), k_characterSize);
+  UpdateScoreDisplay();
   return true;
 }
 
 void Score::Render() {
+  SDL_RenderCopy(m_renderer, m_textTexture, NULL, m_textBox);
+}
+
+void Score::UpdateScoreDisplay() {
   // Create text surface and texture
-  // Doing this every rendering loop is most likely bad for efficiency
-  // TODO: Refactor later
   std::string rawScoreText = std::to_string(m_rawScore);
 
-  SDL_Surface *textSurface =
+  m_textSurface =
       TTF_RenderText_Solid(m_silkscreen, rawScoreText.c_str(), {255, 255, 255});
-  SDL_Texture *textTexture =
-      SDL_CreateTextureFromSurface(m_renderer, textSurface);
+  m_textTexture =
+      SDL_CreateTextureFromSurface(m_renderer, m_textSurface);
 
   // Keep moving text box left as score increases
   TTF_SizeUTF8(m_silkscreen, rawScoreText.c_str(), &m_textBox->w,
                &m_textBox->h);
   m_textBox->x = SCREEN_WIDTH - m_textBox->w;
-  SDL_RenderCopy(m_renderer, textTexture, NULL, m_textBox);
-
-  // TODO: Refactor later
-  SDL_FreeSurface(textSurface);
-  SDL_DestroyTexture(textTexture);
 }
 
 bool Score::Give1Up(int checkpoint) {

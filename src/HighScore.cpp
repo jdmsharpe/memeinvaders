@@ -66,7 +66,7 @@ bool HighScore::Initialize() {
     return false;
   }
 
-  ReloadScores();
+  UpdateHighScoreDisplay();
 
   return true;
 }
@@ -80,7 +80,7 @@ void HighScore::Render() {
   SDL_RenderCopy(m_renderer, m_highScoreTexture, NULL, m_highScoreBox);
 }
 
-void HighScore::ReloadScores() {
+void HighScore::UpdateHighScoreDisplay() {
   std::string highScores, highScoreNames;
   // Sort in decreasing order
   // Have to use lambda because std::pair doesn't get along with
@@ -144,7 +144,7 @@ bool HighScore::AddEntry(const ScoreEntry &entry) {
     m_highScores.push_back(entry);
   }
 
-  ReloadScores();
+  UpdateHighScoreDisplay();
 
   // Now that scores have reloaded, write file
   for (size_t i = 0; i < m_highScores.size(); ++i) {
