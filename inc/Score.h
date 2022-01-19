@@ -14,7 +14,7 @@ public:
   // Render entity
   void Render() override;
 
-  inline int GetScore() { return m_rawScore; }
+  inline long GetScore() { return m_rawScore; }
 
   inline void UpdateScore(int amount) {
     m_rawScore += amount;

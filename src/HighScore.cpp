@@ -41,42 +41,59 @@ HighScore::~HighScore() {
 bool HighScore::Initialize() {
   m_silkscreen = TTF_OpenFont(k_fontPath.c_str(), k_characterSize);
 
-  std::string line, highScores, highScoreNames;
+  std::string line;
   std::ifstream highScoreFile(k_filename);
   if (highScoreFile.is_open()) {
     // Read in all scores
     while (getline(highScoreFile, line)) {
       // Catch scores that cannot convert to long
       try {
-        m_numScores++;
         // Parse the line for name and score
         std::string name = line.substr(0, line.find(k_delimiter));
         long int score =
             std::stol(line.substr(line.find(k_delimiter) + k_delimiter.length()));
-        m_highScores.push_back(std::make_pair(score, name));
+        m_highScores.emplace_back(score, name);
       }
       catch (...) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Score read in is not a number!");
         continue;
       }
     }
-    // Sort in decreasing order
-    // Have to use lambda because std::pair doesn't get along with std::greater<int>
-    std::sort(m_highScores.begin(), m_highScores.end(),
-              [](const auto &left, const auto &right) {
-                return left.first > right.first;
-              });
-    for (int i = 0; i < m_highScores.size(); ++i) {
-      std::string name = m_highScores[i].second;
-      std::string score = std::to_string(m_highScores[i].first);
-      highScoreNames += name + "\n";
-      highScores += score + "\n";
-    }
     highScoreFile.close();
   } else {
     // Assume score file included for now
     SDL_LogError(SDL_LOG_CATEGORY_ERROR, "File does not exist!");
     return false;
+  }
+
+  ReloadScores();
+
+  return true;
+}
+
+void HighScore::Render() {
+  // bool flag = false;
+  // if (!flag) {
+  // }
+  SDL_RenderCopy(m_renderer, m_nameTexture, NULL, m_nameBox);
+  SDL_RenderCopy(m_renderer, m_scoreTexture, NULL, m_scoreBox);
+  SDL_RenderCopy(m_renderer, m_highScoreTexture, NULL, m_highScoreBox);
+}
+
+void HighScore::ReloadScores() {
+  std::string highScores, highScoreNames;
+  // Sort in decreasing order
+  // Have to use lambda because std::pair doesn't get along with
+  // std::greater<int>
+  std::sort(m_highScores.begin(), m_highScores.end(),
+            [](const auto &left, const auto &right) {
+              return left.first > right.first;
+            });
+  for (int i = 0; i < m_highScores.size(); ++i) {
+    std::string name = m_highScores[i].second;
+    std::string score = std::to_string(m_highScores[i].first);
+    highScoreNames += name + "\n";
+    highScores += score + "\n";
   }
 
   // Create text surfaces and textures
@@ -101,34 +118,39 @@ bool HighScore::Initialize() {
   SDL_QueryTexture(m_highScoreTexture, NULL, NULL, &m_highScoreBox->w,
                    &m_highScoreBox->h);
   m_highScoreBox->x = SCREEN_WIDTH / 2 - m_highScoreBox->w / 2;
-
-  return true;
-}
-
-void HighScore::Render() {
-  // bool flag = false;
-  // if (!flag) {
-  // }
-  SDL_RenderCopy(m_renderer, m_nameTexture, NULL, m_nameBox);
-  SDL_RenderCopy(m_renderer, m_scoreTexture, NULL, m_scoreBox);
-  SDL_RenderCopy(m_renderer, m_highScoreTexture, NULL, m_highScoreBox);
 }
 
 bool HighScore::AddEntry(const ScoreEntry &entry) {
   std::ofstream highScoreFile(k_filename);
   int rank = 1;
-  if (m_numScores >= k_maxNumScores) {
+  bool toReturn = true;
+
+  if (m_highScores.size() >= k_maxNumScores) {
     for (size_t i = 0; i < m_highScores.size(); ++i) {
-      if (entry.first < m_highScores[i].first) {
+      if (entry.first <= m_highScores[i].first) {
         rank++;
       }
     }
-    if (rank > k_maxNumScores) {
-      // Not better than current high scores
-      return false;
+    if (rank <= k_maxNumScores) {
+      // Pop old score and add
+      m_highScores.pop_back();
+      m_highScores.push_back(entry);
+    } else {
+      // Not better than current scores
+      toReturn = false;
     }
   } else {
-    return true;
+    // Plenty of room
+    m_highScores.push_back(entry);
   }
-  return true;
+
+  ReloadScores();
+
+  // Now that scores have reloaded, write file
+  for (size_t i = 0; i < m_highScores.size(); ++i) {
+    highScoreFile << m_highScores[i].second << k_delimiter
+                  << std::to_string(m_highScores[i].first) << "\n";
+  }
+
+  return toReturn;
 }
