@@ -24,7 +24,9 @@ public:
   bool AddEntry(const ScoreEntry& entry);
 
 private:
-  int m_numScores = -1;
+  // Update high score display
+  void ReloadScores();
+
   SDL_Rect *m_nameBox = NULL;
   SDL_Rect *m_scoreBox = NULL;
   SDL_Rect *m_highScoreBox = NULL;

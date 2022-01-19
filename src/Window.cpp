@@ -229,6 +229,9 @@ void Window::ProcessEvents(int enemyIdx,
     // Dead after all lives are gone
     if (m_player->GetLives() <= 0) {
       m_player.reset();
+      std::string name;
+      std::cin >> name;
+      m_highScore->AddEntry(std::make_pair(m_score->GetScore(), name));
     }
     m_score->UpdateScore(-5000);
   }
