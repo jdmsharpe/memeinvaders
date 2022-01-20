@@ -31,12 +31,18 @@ int main(int argc, char *argv[]) {
           if (mouse_event.button == SDL_BUTTON_LEFT && gameState == GameState::MAIN_MENU) {
             SDL_GetMouseState(&x, &y);
 
-            //std::cout << "XTEST" << x << std::endl;
-            //std::cout << "YTEST" << y << std::endl;
-            if (x >= 560 && x <= 810){
-              if (y >= 610 && y <= 655) {
+            std::cout << "XTEST" << x << std::endl;
+            std::cout << "YTEST" << y << std::endl;
+            if (x >= 505 && x <= 863){
+              if (y >= 586 && y <= 618) {
                 //std::cout << "START" << std::endl;
                 gameState = GameState::GAME_MODE_1;
+              } else if (y >= 648 && y <= 681) {
+                std::cout << "OPTIONS" << std::endl;
+                //gameState = GameState::GAME_MODE_1;
+              } else if (y >= 709 && y <= 743) {
+                //std::cout << "HIGH SCORE" << std::endl;
+                gameState = GameState::HIGH_SCORE;
               }
             }
           }
