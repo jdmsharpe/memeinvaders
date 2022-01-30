@@ -30,6 +30,9 @@ public:
   // Update lives display based on current lives
   void UpdateLivesDisplay();
 
+  // Go back to starting position
+  void ResetPosition();
+
   // Stores all projectiles player can fire
   std::vector<std::unique_ptr<Projectile>> m_projectileArray;
   // Store entity for rendering current lives on screen

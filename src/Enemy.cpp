@@ -1,9 +1,9 @@
 #include "Enemy.h"
 
 namespace {
-constexpr int k_width = 100;
-constexpr int k_height = 150;
-constexpr double k_baseVely = 6;
+constexpr int k_width = 75;
+constexpr int k_height = 113;
+constexpr double k_baseYVel = 4.75;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
 constexpr int k_maxProjectiles = 2;
@@ -61,12 +61,12 @@ void Enemy::Move() {
   double yVelSum = 0.0;
   if (m_xPos <= 0) {
     m_opposite = false;
-    yVelSum += k_baseVely;
+    yVelSum += k_baseYVel;
   }
   
   if (m_xPos >= SCREEN_WIDTH - k_width) {
     m_opposite = true;
-    yVelSum += k_baseVely;
+    yVelSum += k_baseYVel;
   }
 
   if (m_opposite) {
@@ -79,7 +79,7 @@ void Enemy::Move() {
 
 void Enemy::Fire() {
   // Make sure we're not going over cap
-  if (m_shotsPresent <= k_maxProjectiles) {
+  if (m_shotsPresent < k_maxProjectiles) {
     // Check last time we fired to slow things down a bit
     auto timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
         Clock::now() - m_lastFire);

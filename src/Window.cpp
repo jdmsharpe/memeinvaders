@@ -36,17 +36,32 @@ const auto CountRemainingEnemies =
       return toReturn;
     };
 
-const std::vector<std::pair<int, int>> k_enemyMap = {
-    {SCREEN_WIDTH / 2 + 525, 0},   {SCREEN_WIDTH / 2 + 350, 0},
-    {SCREEN_WIDTH / 2 + 175, 0},   {SCREEN_WIDTH / 2 + 0, 0},
-    {SCREEN_WIDTH / 2 - 175, 0},   {SCREEN_WIDTH / 2 - 350, 0},
-    {SCREEN_WIDTH / 2 - 525, 0},   {SCREEN_WIDTH / 2 + 525, 200},
-    {SCREEN_WIDTH / 2 + 350, 200}, {SCREEN_WIDTH / 2 + 175, 200},
-    {SCREEN_WIDTH / 2, 200},       {SCREEN_WIDTH / 2 - 175, 200},
-    {SCREEN_WIDTH / 2 - 350, 200}, {SCREEN_WIDTH / 2 - 525, 200},
-};
+constexpr int k_XSeparation = 150;
+constexpr int k_YSeparation = 150;
+constexpr int k_checkpointScore = 15000;
 
-constexpr int k_checkpointScore = 5000;
+const std::vector<std::pair<int, int>> k_enemyMap = {
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), 0},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), 0},
+    {SCREEN_WIDTH / 2 + k_XSeparation, 0},
+    {SCREEN_WIDTH / 2, 0},
+    {SCREEN_WIDTH / 2 - k_XSeparation, 0},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), 0},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), 0},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), k_YSeparation},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), k_YSeparation},
+    {SCREEN_WIDTH / 2 + k_XSeparation, k_YSeparation},
+    {SCREEN_WIDTH / 2, k_YSeparation},
+    {SCREEN_WIDTH / 2 - k_XSeparation, k_YSeparation},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), k_YSeparation},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), k_YSeparation},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), k_YSeparation * 2},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), k_YSeparation * 2},
+    {SCREEN_WIDTH / 2 + k_XSeparation, k_YSeparation * 2},
+    {SCREEN_WIDTH / 2, k_YSeparation * 2},
+    {SCREEN_WIDTH / 2 - k_XSeparation, k_YSeparation * 2},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), k_YSeparation * 2},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), k_YSeparation * 2}};
 } // namespace
 
 Window::Window() {}
@@ -108,11 +123,7 @@ void Window::CreateEntities() {
   m_score = CreateAndInitialize<Score>(m_renderer);
 }
 
-void Window::ResetGameMode1(bool resetScore, int difficulty) {
-  // Reset player and lives
-  m_player.reset();
-  m_player = CreateAndInitialize<Player>(m_renderer);
-
+void Window::ResetGameMode1(bool hardReset, int difficulty) {
   // Clear and repopulate vector of enemies
   m_numEnemies = m_startingNumEnemies;
   m_enemies.clear();
@@ -122,9 +133,14 @@ void Window::ResetGameMode1(bool resetScore, int difficulty) {
         m_renderer, k_enemyMap[i].first, k_enemyMap[i].second, difficulty));
   }
 
-  if (resetScore) {
+  if (hardReset) {
+    // Reset player, lives, and score
+    m_player.reset();
+    m_player = CreateAndInitialize<Player>(m_renderer);
     m_score->ResetScore();
   }
+
+  m_player->ResetPosition();
 }
 
 void Window::Close() {
