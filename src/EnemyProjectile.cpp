@@ -2,8 +2,8 @@
 
 namespace {
 // Make it a bit smaller than the player's for now
-constexpr int k_width = 20;
-constexpr int k_height = 60;
+constexpr int k_width = 15;
+constexpr int k_height = 45;
 const std::string k_filename = "../memeinvaders/assets/enemyproj.png";
 } // namespace
 

@@ -20,7 +20,7 @@ public:
   // Create all game entities
   void CreateEntities();
   // If player presses reset...
-  void ResetGameMode1(bool resetScore, int difficulty);
+  void ResetGameMode1(bool hardReset, int difficulty);
   // Destroy window, surface, and renderer
   void Close();
   // Update entity positions and process commands
@@ -47,8 +47,8 @@ public:
   void ProcessEvents(int enemyIdx,
                      const std::pair<bool, bool> &collisionResult);
 
-  // Start with 14 for now
-  int m_startingNumEnemies = 14;
+  // Start with 21 for now
+  int m_startingNumEnemies = 21;
 
 private:
   SDL_Window *m_window = NULL;

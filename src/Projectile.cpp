@@ -1,8 +1,8 @@
 #include "Projectile.h"
 
 namespace {
-constexpr int k_width = 1;
-constexpr int k_height = 75;
+constexpr int k_width = 15;
+constexpr int k_height = 45;
 // const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 } // namespace
 
