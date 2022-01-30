@@ -19,6 +19,7 @@ Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY, int difficult
   // Take into account the current level...
   m_baseXVel *= difficulty;
   m_shotTimeout /= difficulty;
+  m_randNumMod /= difficulty;
 
   // ...for initial velocity
   SetVelocity(m_baseXVel, 0.0);
@@ -85,7 +86,7 @@ void Enemy::Fire() {
         Clock::now() - m_lastFire);
     // Don't always fire
     int randNum = rand();
-    if (timeElapsed.count() >= m_shotTimeout && randNum % k_randNumMod == 0) {
+    if (timeElapsed.count() >= m_shotTimeout && randNum % m_randNumMod == 0) {
       m_lastFire = Clock::now();
       std::unique_ptr<EnemyProjectile> newProj =
           std::make_unique<EnemyProjectile>(

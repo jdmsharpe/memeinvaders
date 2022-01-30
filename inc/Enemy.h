@@ -37,6 +37,7 @@ private:
 
   // How long between shots (if lucky)
   int m_shotTimeout = 1000; // ms
+  int m_randNumMod = 200;
 
   bool m_opposite = true;
   //movement tracker
