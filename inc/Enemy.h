@@ -12,7 +12,7 @@
 // Entity that serves as enemy to player.
 class Enemy : public DynamicEntity {
 public:
-  Enemy(SDL_Renderer *renderer, int startingX, int startingY);
+  Enemy(SDL_Renderer *renderer, int startingX, int startingY, int difficulty);
   ~Enemy();
 
   // Grab image and create texture
@@ -31,6 +31,12 @@ public:
 private:
   // Keeps track of shots on screen
   int m_shotsPresent = 0;
+
+  // Base x-velocity
+  double m_baseXVel = 0.1;
+
+  // How long between shots (if lucky)
+  int m_shotTimeout = 1000; // ms
 
   //movement tracker
   bool hit_left = false;

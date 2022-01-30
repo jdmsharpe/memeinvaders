@@ -13,9 +13,10 @@ std::unique_ptr<T> CreateAndInitialize(SDL_Renderer *renderer) {
 }
 
 std::unique_ptr<Enemy> CreateAndInitializeEnemy(SDL_Renderer *renderer,
-                                                int startingX, int startingY) {
+                                                int startingX, int startingY,
+                                                int difficulty) {
   std::unique_ptr<Enemy> toReturn =
-      std::make_unique<Enemy>(renderer, startingX, startingY);
+      std::make_unique<Enemy>(renderer, startingX, startingY, difficulty);
   if (!toReturn->Initialize()) {
     SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Failed to initialize %s!",
                  toReturn->GetName().c_str());
@@ -23,6 +24,17 @@ std::unique_ptr<Enemy> CreateAndInitializeEnemy(SDL_Renderer *renderer,
   }
   return std::move(toReturn);
 }
+
+const auto CountRemainingEnemies =
+    [](const std::vector<std::unique_ptr<Enemy>> &enemies) {
+      int toReturn = 0;
+      for (const auto &enemy : enemies) {
+        if (enemy) {
+          toReturn++;
+        }
+      }
+      return toReturn;
+    };
 
 const std::vector<std::pair<int, int>> k_enemyMap = {
     {SCREEN_WIDTH / 2 + 600, 0},   {SCREEN_WIDTH / 2 + 400, 0},
@@ -90,13 +102,13 @@ void Window::CreateEntities() {
 
   for (size_t i = 0; i < m_startingNumEnemies; ++i) {
     m_enemies.push_back(CreateAndInitializeEnemy(
-        m_renderer, k_enemyMap[i].first, k_enemyMap[i].second));
+        m_renderer, k_enemyMap[i].first, k_enemyMap[i].second, m_level));
   }
 
   m_score = CreateAndInitialize<Score>(m_renderer);
 }
 
-void Window::ResetGameMode1() {
+void Window::ResetGameMode1(bool resetScore, int difficulty) {
   // Reset player and lives
   m_player.reset();
   m_player = CreateAndInitialize<Player>(m_renderer);
@@ -107,10 +119,12 @@ void Window::ResetGameMode1() {
 
   for (size_t i = 0; i < m_numEnemies; ++i) {
     m_enemies.push_back(CreateAndInitializeEnemy(
-        m_renderer, k_enemyMap[i].first, k_enemyMap[i].second));
+        m_renderer, k_enemyMap[i].first, k_enemyMap[i].second, difficulty));
   }
 
-  m_score->ResetScore();
+  if (resetScore) {
+    m_score->ResetScore();
+  }
 }
 
 void Window::Close() {
@@ -166,8 +180,7 @@ void Window::Render(const GameState &gameState) {
   // wait a bit until they're equal (fixed framerate)
   if (DELTA_TIME > frameTime) {
     // Debug print to check actual elapsed time
-    // SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Elapsed frame time was %d
-    // ms.", frameTime);
+    // SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Elapsed frame time was %d ms.", frameTime);
     SDL_Delay(DELTA_TIME - frameTime);
   }
 }
@@ -179,37 +192,43 @@ void Window::CollisionDetection(int enemyIdx,
   BoundingBox *playerBox = m_player->GetBoundingBox();
   BoundingBox *enemyBox = enemy->GetBoundingBox();
 
+  // If player touches enemy, kill player and enemy
+  if (playerBox->bottom > enemyBox->top && playerBox->top < enemyBox->bottom &&
+      playerBox->right > enemyBox->left && playerBox->left < enemyBox->right) {
+    collisionResult.first = true;
+    collisionResult.second = true;
+  }
+
   // Loop through all player-filed projectiles and check for enemy collision
-  // TODO: need extra for-loop to account for multiple enemies
-  for (size_t i = 0; i < m_player->m_projectileArray.size(); i++) {
-    CONTINUE_IF_NULL(m_player->m_projectileArray[i]);
+  for (size_t j = 0; j < m_player->m_projectileArray.size(); j++) {
+    CONTINUE_IF_NULL(m_player->m_projectileArray[j]);
     BoundingBox *projectileBox =
-        m_player->m_projectileArray[i]->GetBoundingBox();
+        m_player->m_projectileArray[j]->GetBoundingBox();
     // Separating axis test
+    // If player projectile hit enemy, kill enemy
     if (enemyBox->bottom > projectileBox->top &&
         enemyBox->top < projectileBox->bottom &&
         enemyBox->right > projectileBox->left &&
         enemyBox->left < projectileBox->right) {
       collisionResult.first = true;
       // Delete projectile
-      m_player->m_projectileArray[i].reset();
+      m_player->m_projectileArray[j].reset();
     }
   }
 
-  // Loop through all enemy-fired projectiles and check for enemy collision
-  // TODO: need extra for-loop to account for multiple enemies
-  for (size_t j = 0; j < enemy->m_projectileArray.size(); j++) {
-    CONTINUE_IF_NULL(enemy->m_projectileArray[j]);
+  // Loop through all enemy-fired projectiles and check for player collision
+  for (size_t k = 0; k < enemy->m_projectileArray.size(); k++) {
+    CONTINUE_IF_NULL(enemy->m_projectileArray[k]);
     BoundingBox *enemyProjectileBox =
-        enemy->m_projectileArray[j]->GetBoundingBox();
-    // Separating axis test
+        enemy->m_projectileArray[k]->GetBoundingBox();
+    // If enemy projectile hit player, kill player
     if (playerBox->bottom > enemyProjectileBox->top &&
         playerBox->top < enemyProjectileBox->bottom &&
         playerBox->right > enemyProjectileBox->left &&
         playerBox->left < enemyProjectileBox->right) {
       collisionResult.second = true;
       // Delete projectile
-      enemy->m_projectileArray[j].reset();
+      enemy->m_projectileArray[k].reset();
     }
   }
 }
@@ -219,9 +238,13 @@ void Window::ProcessEvents(int enemyIdx,
   // Kill enemy
   if (collisionResult.first) {
     m_enemies[enemyIdx].reset();
-    m_numEnemies--;
+    m_numEnemies = CountRemainingEnemies(m_enemies);
     m_score->UpdateScore(1000);
     m_validCheckpoint = true;
+    // All enemies dead
+    if (m_numEnemies == 0) {
+      m_nextLevel = true;
+    }
   }
 
   // Kill player
@@ -246,13 +269,18 @@ void Window::ProcessEvents(int enemyIdx,
 
   // Game over, player has died
   // Enter high score if applicable
-  // For now, game just freezes here unless you reset
-  // Need game over screen
+  // Need actual game over screen with actual prompt
   if (m_gameOver) {
     std::string name;
     std::cout << "Please enter your name: ";
     std::cin >> name;
     m_highScore->AddEntry(std::make_pair(m_score->GetScore(), name));
     m_gameOver = false;
+  }
+
+  if (m_nextLevel) {
+    m_level++;
+    ResetGameMode1(false, m_level);
+    m_nextLevel = false;
   }
 }
