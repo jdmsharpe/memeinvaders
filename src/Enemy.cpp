@@ -73,35 +73,6 @@ void Enemy::Move() {
     xVelSum *= -1;
   }
 
-  // // Handle all directions and bounds check
-  // // (rule is don't let sprite go off screen)
-  // // bool hit_left = false;
-  // // bool hit_right = false;
-  // // THIS NEEDS OPTIMIZATION
-  // if (m_xPos > 0) {
-  //   if (hit_right == true) {
-  //     // Hit left wall
-  //     xVelSum -= m_baseXVel;
-  //     if (m_xPos == 1) {
-  //       yVelSum += k_baseVely;
-  //       hit_left = true;
-  //       hit_right = false;
-  //     }
-  //   }
-  // }
-
-  // if (m_xPos < SCREEN_WIDTH - k_width) {
-  //   // hit left wall
-  //   if (hit_left == true) {
-  //     xVelSum += m_baseXVel;
-  //     if (m_xPos == SCREEN_WIDTH - k_width - 1) {
-  //       yVelSum += k_baseVely;
-  //       hit_left = false;
-  //       hit_right = true;
-  //     }
-  //   }
-  // }
-
   SetVelocity(xVelSum, yVelSum);
   UpdatePositionFromVelocity();
 }
