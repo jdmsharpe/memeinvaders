@@ -37,13 +37,13 @@ const auto CountRemainingEnemies =
     };
 
 const std::vector<std::pair<int, int>> k_enemyMap = {
-    {SCREEN_WIDTH / 2 + 600, 0},   {SCREEN_WIDTH / 2 + 400, 0},
-    {SCREEN_WIDTH / 2 + 200, 0},   {SCREEN_WIDTH / 2 + 0, 0},
-    {SCREEN_WIDTH / 2 - 200, 0},   {SCREEN_WIDTH / 2 - 400, 0},
-    {SCREEN_WIDTH / 2 - 600, 0},   {SCREEN_WIDTH / 2 + 600, 200},
-    {SCREEN_WIDTH / 2 + 400, 200}, {SCREEN_WIDTH / 2 + 200, 200},
-    {SCREEN_WIDTH / 2, 200},       {SCREEN_WIDTH / 2 - 200, 200},
-    {SCREEN_WIDTH / 2 - 400, 200}, {SCREEN_WIDTH / 2 - 600, 200},
+    {SCREEN_WIDTH / 2 + 525, 0},   {SCREEN_WIDTH / 2 + 350, 0},
+    {SCREEN_WIDTH / 2 + 175, 0},   {SCREEN_WIDTH / 2 + 0, 0},
+    {SCREEN_WIDTH / 2 - 175, 0},   {SCREEN_WIDTH / 2 - 350, 0},
+    {SCREEN_WIDTH / 2 - 525, 0},   {SCREEN_WIDTH / 2 + 525, 200},
+    {SCREEN_WIDTH / 2 + 350, 200}, {SCREEN_WIDTH / 2 + 175, 200},
+    {SCREEN_WIDTH / 2, 200},       {SCREEN_WIDTH / 2 - 175, 200},
+    {SCREEN_WIDTH / 2 - 350, 200}, {SCREEN_WIDTH / 2 - 525, 200},
 };
 
 constexpr int k_checkpointScore = 5000;

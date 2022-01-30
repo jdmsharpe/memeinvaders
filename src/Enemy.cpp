@@ -8,17 +8,20 @@ const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
 constexpr int k_maxProjectiles = 2;
 constexpr int k_randNumMod = 200;
+constexpr int k_offscreenEnough = 10;
 } // namespace
 
 Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY, int difficulty)
     : DynamicEntity(renderer, "enemy", k_width, k_height) {
   // Enemy should spawn in bottom-middle of screen
   SetPosition(startingX, startingY);
-  SetVelocity(0.0, 0.0);
 
-  // Take into account the current level
+  // Take into account the current level...
   m_baseXVel *= difficulty;
   m_shotTimeout /= difficulty;
+
+  // ...for initial velocity
+  SetVelocity(m_baseXVel, 0.0);
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
@@ -54,44 +57,51 @@ void Enemy::Render() {
 }
 
 void Enemy::Move() {
-  // Handle all directions and bounds check
-  // (rule is don't let sprite go off screen)
-  double xVelSum = 0.0;
+  double xVelSum = m_baseXVel;
   double yVelSum = 0.0;
-  // bool hit_left = false;
-  // bool hit_right = false;
-  // THIS NEEDS OPTIMIZATION
-  if (m_xPos > 0) {
-    if (hit_right == true) {
-      // Hit left wall
-      xVelSum -= m_baseXVel;
-      if (m_xPos == 1) {
-        yVelSum += k_baseVely;
-        hit_left = true;
-        hit_right = false;
-      }
-    }
+  if (m_xPos <= 0) {
+    m_opposite = false;
+    yVelSum += k_baseVely;
+  }
+  
+  if (m_xPos >= SCREEN_WIDTH - k_width) {
+    m_opposite = true;
+    yVelSum += k_baseVely;
   }
 
-  if (m_xPos < SCREEN_WIDTH - k_width) {
-    // hit left wall
-    if (hit_left == true) {
-      xVelSum += m_baseXVel;
-      if (m_xPos == SCREEN_WIDTH - k_width - 1) {
-        yVelSum += k_baseVely;
-        hit_left = false;
-        hit_right = true;
-      }
-    }
+  if (m_opposite) {
+    xVelSum *= -1;
   }
 
-  // if (keyboardState[SDL_SCANCODE_UP] && m_yPos > 0) {
-  //   yVelSum -= k_baseVel;
+  // // Handle all directions and bounds check
+  // // (rule is don't let sprite go off screen)
+  // // bool hit_left = false;
+  // // bool hit_right = false;
+  // // THIS NEEDS OPTIMIZATION
+  // if (m_xPos > 0) {
+  //   if (hit_right == true) {
+  //     // Hit left wall
+  //     xVelSum -= m_baseXVel;
+  //     if (m_xPos == 1) {
+  //       yVelSum += k_baseVely;
+  //       hit_left = true;
+  //       hit_right = false;
+  //     }
+  //   }
   // }
-  // if (keyboardState[SDL_SCANCODE_DOWN] &&
-  //     m_yPos < SCREEN_HEIGHT - k_height) {
-  //   yVelSum += k_baseVel;
+
+  // if (m_xPos < SCREEN_WIDTH - k_width) {
+  //   // hit left wall
+  //   if (hit_left == true) {
+  //     xVelSum += m_baseXVel;
+  //     if (m_xPos == SCREEN_WIDTH - k_width - 1) {
+  //       yVelSum += k_baseVely;
+  //       hit_left = false;
+  //       hit_right = true;
+  //     }
+  //   }
   // }
+
   SetVelocity(xVelSum, yVelSum);
   UpdatePositionFromVelocity();
 }
