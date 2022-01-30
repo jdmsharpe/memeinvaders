@@ -20,11 +20,13 @@ public:
   // Create all game entities
   void CreateEntities();
   // If player presses reset...
-  void ResetGameMode1();
+  void ResetGameMode1(bool resetScore, int difficulty);
   // Destroy window, surface, and renderer
   void Close();
   // Update entity positions and process commands
   void Render(const GameState &gameState);
+  // Make game harder on level increment
+  void IncreaseDifficulty();
 
   // Functions to update player and enemies from inputs
   inline void PlayerMoves(const Uint8 *keyboardState) {
@@ -66,6 +68,10 @@ private:
   bool m_validCheckpoint = false;
   // Track if game has ended
   bool m_gameOver = false;
+  // Track if it's time to increment level
+  bool m_nextLevel = false;
+  // Current level (determines difficulty)
+  int m_level = 1;
 };
 
 #endif // WINDOW_H

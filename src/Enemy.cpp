@@ -3,20 +3,22 @@
 namespace {
 constexpr int k_width = 100;
 constexpr int k_height = 150;
-constexpr double k_baseVel = 0.1;
 constexpr double k_baseVely = 6;
 const std::string k_filename = "../memeinvaders/assets/enemy1.png";
 constexpr int k_projectileHeightLimit = SCREEN_HEIGHT;
 constexpr int k_maxProjectiles = 2;
-constexpr int k_shotTimeout = 1000; // ms
 constexpr int k_randNumMod = 200;
 } // namespace
 
-Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY)
+Enemy::Enemy(SDL_Renderer *renderer, int startingX, int startingY, int difficulty)
     : DynamicEntity(renderer, "enemy", k_width, k_height) {
   // Enemy should spawn in bottom-middle of screen
   SetPosition(startingX, startingY);
   SetVelocity(0.0, 0.0);
+
+  // Take into account the current level
+  m_baseXVel *= difficulty;
+  m_shotTimeout /= difficulty;
 
   m_screenBox = new SDL_Rect{0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   m_textureBox = new SDL_Rect{m_xPos, m_yPos, k_width, k_height};
@@ -62,7 +64,7 @@ void Enemy::Move() {
   if (m_xPos > 0) {
     if (hit_right == true) {
       // Hit left wall
-      xVelSum -= k_baseVel;
+      xVelSum -= m_baseXVel;
       if (m_xPos == 1) {
         yVelSum += k_baseVely;
         hit_left = true;
@@ -74,7 +76,7 @@ void Enemy::Move() {
   if (m_xPos < SCREEN_WIDTH - k_width) {
     // hit left wall
     if (hit_left == true) {
-      xVelSum += k_baseVel;
+      xVelSum += m_baseXVel;
       if (m_xPos == SCREEN_WIDTH - k_width - 1) {
         yVelSum += k_baseVely;
         hit_left = false;
@@ -102,7 +104,7 @@ void Enemy::Fire() {
         Clock::now() - m_lastFire);
     // Don't always fire
     int randNum = rand();
-    if (timeElapsed.count() >= k_shotTimeout && randNum % k_randNumMod == 0) {
+    if (timeElapsed.count() >= m_shotTimeout && randNum % k_randNumMod == 0) {
       m_lastFire = Clock::now();
       std::unique_ptr<EnemyProjectile> newProj =
           std::make_unique<EnemyProjectile>(
