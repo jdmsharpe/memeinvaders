@@ -1,11 +1,11 @@
 #include "MainMenuOptions.h"
 
 namespace {
-const std::string k_filename = "../memeinvaders/assets/new_game.png";
-constexpr int k_width = 1100;
-constexpr int k_height = 700;
-constexpr int k_widthOffset = 550;
-constexpr int k_heightOffset = 600;
+const std::string k_filename = "../memeinvaders/assets/menu.png";
+constexpr int k_width = 1000;
+constexpr int k_height = 600;
+constexpr int k_widthOffset = 500;
+constexpr int k_heightOffset = 580;
 } // namespace
 
 MainMenuOptions::MainMenuOptions(SDL_Renderer *renderer)
