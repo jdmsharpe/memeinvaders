@@ -38,10 +38,11 @@ private:
   // How long between shots (if lucky)
   int m_shotTimeout = 1000; // ms
 
+  bool m_opposite = true;
   //movement tracker
-  bool hit_left = false;
-  bool hit_right = true;
-  int y_counter = 0;
+  // bool hit_left = false;
+  // bool hit_right = true;
+  // int y_counter = 0;
   
   using Clock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<Clock>;
