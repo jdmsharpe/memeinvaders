@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include "Enemy.h"
+#include "EnemyProjectileHandler.h"
 #include "HighScore.h"
 #include "MainMenu.h"
 #include "MainMenuOptions.h"
@@ -37,7 +38,11 @@ public:
   }
   inline void PlayerFires() { EXECUTE_IF_VALID(m_player, m_player->Fire()); }
   inline void EnemyFires(int enemyIdx) {
-    EXECUTE_IF_VALID(m_enemies[enemyIdx], m_enemies[enemyIdx]->Fire());
+    RETURN_IF_NULL(m_enemies[enemyIdx]);
+    auto proj = m_enemies[enemyIdx]->Fire();
+    if (proj) {
+      m_projectileHandler->AddNewProjectile(std::move(proj));
+    }
   }
 
   // Check if projectiles have hit target
@@ -61,6 +66,9 @@ private:
   std::vector<std::unique_ptr<Enemy>> m_enemies;
   std::unique_ptr<Score> m_score = nullptr;
   std::unique_ptr<HighScore> m_highScore = nullptr;
+
+  // Storage for all enemy projectiles on screen
+  std::unique_ptr<EnemyProjectileHandler> m_projectileHandler;
 
   int m_numEnemies = m_startingNumEnemies;
 

@@ -72,9 +72,6 @@ bool HighScore::Initialize() {
 }
 
 void HighScore::Render() {
-  // bool flag = false;
-  // if (!flag) {
-  // }
   SDL_RenderCopy(m_renderer, m_nameTexture, NULL, m_nameBox);
   SDL_RenderCopy(m_renderer, m_scoreTexture, NULL, m_scoreBox);
   SDL_RenderCopy(m_renderer, m_highScoreTexture, NULL, m_highScoreBox);

@@ -39,6 +39,7 @@ const auto CountRemainingEnemies =
 constexpr int k_XSeparation = 150;
 constexpr int k_YSeparation = 150;
 constexpr int k_checkpointScore = 15000;
+constexpr int k_enemyHitDeduction = -5000;
 
 const std::vector<std::pair<int, int>> k_enemyMap = {
     {SCREEN_WIDTH / 2 + (k_XSeparation * 3), 0},
@@ -114,6 +115,7 @@ void Window::CreateEntities() {
   m_mainMenuOptions = CreateAndInitialize<MainMenuOptions>(m_renderer);
   m_highScore = CreateAndInitialize<HighScore>(m_renderer);
   m_player = CreateAndInitialize<Player>(m_renderer);
+  m_projectileHandler = CreateAndInitialize<EnemyProjectileHandler>(m_renderer);
 
   for (size_t i = 0; i < m_startingNumEnemies; ++i) {
     m_enemies.push_back(CreateAndInitializeEnemy(
@@ -132,6 +134,8 @@ void Window::ResetGameMode1(bool hardReset, int difficulty) {
     m_enemies.push_back(CreateAndInitializeEnemy(
         m_renderer, k_enemyMap[i].first, k_enemyMap[i].second, difficulty));
   }
+
+  m_projectileHandler = CreateAndInitialize<EnemyProjectileHandler>(m_renderer);
 
   if (hardReset) {
     // Reset player, lives, and score
@@ -174,6 +178,7 @@ void Window::Render(const GameState &gameState) {
     break;
   case GameState::GAME_MODE_1:
     EXECUTE_IF_VALID(m_player, m_player->Render());
+    EXECUTE_IF_VALID(m_projectileHandler, m_projectileHandler->Render());
     for (int i = 0; i < m_startingNumEnemies; ++i) {
       EXECUTE_IF_VALID(m_enemies[i], m_enemies[i]->Render());
       // First flag is for enemy, second is for player
@@ -196,7 +201,8 @@ void Window::Render(const GameState &gameState) {
   // wait a bit until they're equal (fixed framerate)
   if (DELTA_TIME > frameTime) {
     // Debug print to check actual elapsed time
-    // SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Elapsed frame time was %d ms.", frameTime);
+    // SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Elapsed frame time was %d
+    // ms.", frameTime);
     SDL_Delay(DELTA_TIME - frameTime);
   }
 }
@@ -233,10 +239,10 @@ void Window::CollisionDetection(int enemyIdx,
   }
 
   // Loop through all enemy-fired projectiles and check for player collision
-  for (size_t k = 0; k < enemy->m_projectileArray.size(); k++) {
-    CONTINUE_IF_NULL(enemy->m_projectileArray[k]);
+  for (size_t k = 0; k < m_projectileHandler->GetNumProjectiles(); k++) {
+    CONTINUE_IF_NULL(m_projectileHandler->GetProjectileReference(k));
     BoundingBox *enemyProjectileBox =
-        enemy->m_projectileArray[k]->GetBoundingBox();
+        m_projectileHandler->GetProjectileReference(k)->GetBoundingBox();
     // If enemy projectile hit player, kill player
     if (playerBox->bottom > enemyProjectileBox->top &&
         playerBox->top < enemyProjectileBox->bottom &&
@@ -244,7 +250,7 @@ void Window::CollisionDetection(int enemyIdx,
         playerBox->left < enemyProjectileBox->right) {
       collisionResult.second = true;
       // Delete projectile
-      enemy->m_projectileArray[k].reset();
+      m_projectileHandler->GetProjectileReference(k).reset();
     }
   }
 }
@@ -273,7 +279,7 @@ void Window::ProcessEvents(int enemyIdx,
       m_player.reset();
       m_gameOver = true;
     }
-    m_score->UpdateScore(-5000);
+    m_score->UpdateScore(k_enemyHitDeduction);
     m_validCheckpoint = false;
   }
 
@@ -294,6 +300,7 @@ void Window::ProcessEvents(int enemyIdx,
     m_gameOver = false;
   }
 
+  // Increment level and difficulty
   if (m_nextLevel) {
     m_level++;
     ResetGameMode1(false, m_level);
