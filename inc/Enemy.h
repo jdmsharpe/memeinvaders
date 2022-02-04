@@ -21,17 +21,10 @@ public:
   void Render() override;
   // Perform predefined movement
   void Move();
-  // Fire projectile
-  void Fire();
-
-  // Stores all projectiles enemy can fire
-  // Use unique_ptr because raw pointers scare me
-  std::deque<std::unique_ptr<EnemyProjectile>> m_projectileArray;
+  // Return projectile (so it doesn't disappear when enemy dies)
+  std::unique_ptr<EnemyProjectile> Fire();
 
 private:
-  // Keeps track of shots on screen
-  int m_shotsPresent = 0;
-
   // Base x-velocity
   double m_baseXVel = 0.1;
 
@@ -39,11 +32,8 @@ private:
   int m_shotTimeout = 1000; // ms
   int m_randNumMod = 200;
 
-  bool m_opposite = true;
-  //movement tracker
-  // bool hit_left = false;
-  // bool hit_right = true;
-  // int y_counter = 0;
+  // Which direction to go
+  bool m_leftCrawl = true;
   
   using Clock = std::chrono::high_resolution_clock;
   using TimePoint = std::chrono::time_point<Clock>;
