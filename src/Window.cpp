@@ -37,32 +37,33 @@ const auto CountRemainingEnemies =
     };
 
 constexpr int k_XSeparation = 150;
+constexpr int k_baseY = 10;
 constexpr int k_YSeparation = 150;
 constexpr int k_checkpointScore = 15000;
 constexpr int k_enemyHitDeduction = -5000;
 
 const std::vector<std::pair<int, int>> k_enemyMap = {
-    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), 0},
-    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), 0},
-    {SCREEN_WIDTH / 2 + k_XSeparation, 0},
-    {SCREEN_WIDTH / 2, 0},
-    {SCREEN_WIDTH / 2 - k_XSeparation, 0},
-    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), 0},
-    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), 0},
-    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), k_YSeparation},
-    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), k_YSeparation},
-    {SCREEN_WIDTH / 2 + k_XSeparation, k_YSeparation},
-    {SCREEN_WIDTH / 2, k_YSeparation},
-    {SCREEN_WIDTH / 2 - k_XSeparation, k_YSeparation},
-    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), k_YSeparation},
-    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), k_YSeparation},
-    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), k_YSeparation * 2},
-    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), k_YSeparation * 2},
-    {SCREEN_WIDTH / 2 + k_XSeparation, k_YSeparation * 2},
-    {SCREEN_WIDTH / 2, k_YSeparation * 2},
-    {SCREEN_WIDTH / 2 - k_XSeparation, k_YSeparation * 2},
-    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), k_YSeparation * 2},
-    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), k_YSeparation * 2}};
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), k_baseY},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), k_baseY},
+    {SCREEN_WIDTH / 2 + k_XSeparation, k_baseY},
+    {SCREEN_WIDTH / 2, k_baseY},
+    {SCREEN_WIDTH / 2 - k_XSeparation, k_baseY},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), k_baseY},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), k_baseY},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), k_YSeparation + k_baseY},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), k_YSeparation + k_baseY},
+    {SCREEN_WIDTH / 2 + k_XSeparation, k_YSeparation + k_baseY},
+    {SCREEN_WIDTH / 2, k_YSeparation + k_baseY},
+    {SCREEN_WIDTH / 2 - k_XSeparation, k_YSeparation + k_baseY},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), k_YSeparation + k_baseY},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), k_YSeparation + k_baseY},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 3), k_YSeparation * 2 + k_baseY},
+    {SCREEN_WIDTH / 2 + (k_XSeparation * 2), k_YSeparation * 2 + k_baseY},
+    {SCREEN_WIDTH / 2 + k_XSeparation, k_YSeparation * 2 + k_baseY},
+    {SCREEN_WIDTH / 2, k_YSeparation * 2 + k_baseY},
+    {SCREEN_WIDTH / 2 - k_XSeparation, k_YSeparation * 2 + k_baseY},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 2), k_YSeparation * 2 + k_baseY},
+    {SCREEN_WIDTH / 2 - (k_XSeparation * 3), k_YSeparation * 2 + k_baseY}};
 } // namespace
 
 Window::Window() {}
